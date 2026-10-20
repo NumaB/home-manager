@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_DB: home_manager_ci
+          POSTGRES_USER: home_manager
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U home_manager -d home_manager_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://home_manager@localhost:5432/home_manager_ci?schema=public
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Validate Prisma schema against temporary PostgreSQL
+        run: pnpm --filter @home-manager/api db:push
+      - name: Typecheck, test, format and build
+        run: pnpm check
+      - name: Smoke test API and Swagger UI
+        run: |
+          pnpm --filter @home-manager/api start:prod > /tmp/home-manager-api.log 2>&1 &
+          api_pid=$!
+          trap 'kill "$api_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3001/api/health >/dev/null; then break; fi
+            sleep 2
+          done
+          curl --fail http://127.0.0.1:3001/api/health
+          curl --fail --silent http://127.0.0.1:3001/api/docs | grep -q 'swagger-ui'
+          curl --fail --silent http://127.0.0.1:3001/api/docs-json | grep -q 'Home Manager API'
+      - name: Smoke test web server
+        run: |
+          WEB_PORT=3010 pnpm --filter @home-manager/web preview > /tmp/home-manager-web.log 2>&1 &
+          web_pid=$!
+          trap 'kill "$web_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3010/ >/dev/null; then break; fi
+            sleep 2
+          done
+          curl --fail --silent http://127.0.0.1:3010/ | grep -q 'Home Manager'

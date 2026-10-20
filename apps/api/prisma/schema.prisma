@@ -1,0 +1,8 @@
+generator client {
+  // The JS generator keeps the conventional CommonJS output used by Nest's Node build.
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
