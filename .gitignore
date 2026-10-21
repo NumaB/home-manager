@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+**/node_modules/
+dist/
+.output/
+.vinxi/
+.tanstack/
+coverage/
+
+# Local environment files (keep the template)
+.env
+.env.*
+!.env.example
+
+# Generated source
+apps/web/src/routeTree.gen.ts
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
