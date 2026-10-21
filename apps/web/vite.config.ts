@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
         "@components": fileURLToPath(
           new URL("./src/components", import.meta.url),
         ),
+        "@features": fileURLToPath(new URL("./src/features", import.meta.url)),
         "@stores": fileURLToPath(new URL("./src/stores", import.meta.url)),
       },
     },

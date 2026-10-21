@@ -5,7 +5,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { AppStoreProvider } from "@stores/app-store-provider";
-import "../i18n";
+import "../i18n/i18n";
 import "../styles.css";
 
 export const Route = createRootRoute({

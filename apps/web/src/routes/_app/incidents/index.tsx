@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlaceholderPage } from "@components/PlaceholderPage";
+import { IncidentsPage } from "@features/incidents/IncidentsPage";
 
 export const Route = createFileRoute("/_app/incidents/")({
-  component: IncidentPage,
+  component: IncidentsPage,
 });
-
-function IncidentPage() {
-  return <PlaceholderPage titleKey="pages.incidents" />;
-}

@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlaceholderPage } from "@components/PlaceholderPage";
+import { StocksPage } from "@features/stocks/StocksPage";
 
 export const Route = createFileRoute("/_app/stocks/")({
   component: StocksPage,
 });
-
-function StocksPage() {
-  return <PlaceholderPage titleKey="pages.stocks" />;
-}
