@@ -15,6 +15,9 @@ coverage/
 # Generated source
 apps/web/src/routeTree.gen.ts
 
+# Keep TanStack file-based index routes even if globally ignored
+!apps/web/src/routes/**/index.tsx
+
 # Editors and operating systems
 .DS_Store
 .idea/
