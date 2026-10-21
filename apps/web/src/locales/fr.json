@@ -1,0 +1,32 @@
+{
+  "app": {
+    "name": "Home Manager"
+  },
+  "navigation": {
+    "main": "Navigation principale",
+    "calendar": "Calendrier",
+    "checklist": "Checklist",
+    "incidents": "Incidents",
+    "declareIncident": "Déclarer un incident",
+    "inventory": "Inventaire",
+    "stocks": "Stocks",
+    "gallery": "Galerie",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "menuLabel": "Menu de navigation",
+    "allPages": "Toutes les pages",
+    "section": "Navigation",
+    "menuTitle": "Menu",
+    "moreSections": "D’autres rubriques pourront être ajoutées ici."
+  },
+  "pages": {
+    "title": "Page {{title}}",
+    "calendar": "calendrier",
+    "checklist": "checklist",
+    "incidents": "déclaration d’incidents",
+    "inventory": "inventaire",
+    "stocks": "stocks",
+    "gallery": "galerie",
+    "calendarDescription": "Calendrier des réservations de la maison."
+  }
+}

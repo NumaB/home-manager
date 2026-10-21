@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "figma": {
+      "url": "https://mcp.figma.com/mcp",
+      "description": "Accéder aux fichiers et ressources Figma du compte authentifié",
+      "oauth": {
+        "clientName": "Claude Code"
+      }
+    }
+  }
+}
