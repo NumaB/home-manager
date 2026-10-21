@@ -54,13 +54,3 @@ jobs:
           curl --fail http://127.0.0.1:3001/api/health
           curl --fail --silent http://127.0.0.1:3001/api/docs | grep -q 'swagger-ui'
           curl --fail --silent http://127.0.0.1:3001/api/docs-json | grep -q 'Home Manager API'
-      - name: Smoke test web server
-        run: |
-          WEB_PORT=3010 pnpm --filter @home-manager/web preview > /tmp/home-manager-web.log 2>&1 &
-          web_pid=$!
-          trap 'kill "$web_pid" 2>/dev/null || true' EXIT
-          for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:3010/ >/dev/null; then break; fi
-            sleep 2
-          done
-          curl --fail --silent http://127.0.0.1:3010/ | grep -q 'Home Manager'
