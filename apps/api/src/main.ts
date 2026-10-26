@@ -11,8 +11,8 @@ async function bootstrap() {
   app.setGlobalPrefix("api");
 
   const openApiConfig = new DocumentBuilder()
-    .setTitle("Home Manager API")
-    .setDescription("API REST de Home Manager")
+    .setTitle("Doz Manager API")
+    .setDescription("API REST de Doz Manager")
     .setVersion("0.0.0")
     .build();
   const openApiDocument = SwaggerModule.createDocument(app, openApiConfig);
