@@ -1,6 +1,7 @@
 import {
   createRootRoute,
   HeadContent,
+  Navigate,
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
@@ -9,6 +10,7 @@ import "../i18n/i18n";
 import "../styles.css";
 
 export const Route = createRootRoute({
+  notFoundComponent: () => <Navigate to="/" replace />,
   head: () => ({
     meta: [
       { charSet: "utf-8" },

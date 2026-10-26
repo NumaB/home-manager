@@ -3,6 +3,7 @@ import { Outlet } from "@tanstack/react-router";
 import { AppHeader } from "./AppHeader";
 import { AppMenu } from "../navigation/AppMenu";
 import { BottomNavigation } from "../navigation/BottomNavigation";
+import { SideNavigation } from "../navigation/SideNavigation";
 import { useAppStore } from "@stores/app-store-provider";
 
 export function AppLayout() {
@@ -22,12 +23,15 @@ export function AppLayout() {
   }, [menuOpen, closeMenu]);
 
   return (
-    <div className="min-h-screen min-h-[100svh] pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-[130px]">
-      <AppHeader />
-      <main className="mx-auto w-full max-w-[760px] px-6 pt-7 pb-11 md:pt-12">
-        <Outlet />
-      </main>
-      {menuOpen && <AppMenu onClose={closeMenu} />}
+    <div className="min-h-screen min-h-[100svh] pb-[calc(104px+env(safe-area-inset-bottom))] md:flex md:pb-0">
+      <SideNavigation />
+      <div className="min-w-0 flex-1">
+        <AppHeader />
+        <main className="mx-auto w-full max-w-[760px] px-6 pt-7 pb-11 md:max-w-[1040px] md:px-10 md:pt-10">
+          <Outlet />
+        </main>
+      </div>
+      {menuOpen && <div className="md:hidden"><AppMenu onClose={closeMenu} /></div>}
       <BottomNavigation menuOpen={menuOpen} onMenuToggle={toggleMenu} />
     </div>
   );

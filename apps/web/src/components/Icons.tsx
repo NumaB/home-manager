@@ -7,6 +7,9 @@ const icons = {
   close: new URL("../icons/close.svg", import.meta.url),
   menu: new URL("../icons/menu.svg", import.meta.url),
   tools: new URL("../icons/tools.svg", import.meta.url),
+  inventory: new URL("../icons/inventory.svg", import.meta.url),
+  stocks: new URL("../icons/stocks.svg", import.meta.url),
+  gallery: new URL("../icons/gallery.svg", import.meta.url),
 };
 
 export type IconName = keyof typeof icons;

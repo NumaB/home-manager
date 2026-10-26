@@ -1,15 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Icons } from "../Icons";
-
-const menuItems = [
-  { to: "/", label: "navigation.calendar" },
-  { to: "/checklist", label: "navigation.checklist" },
-  { to: "/incidents", label: "navigation.declareIncident" },
-  { to: "/inventory", label: "navigation.inventory" },
-  { to: "/stocks", label: "navigation.stocks" },
-  { to: "/gallery", label: "navigation.gallery" },
-] as const;
+import { navigationItems } from "./navigationItems";
 
 type AppMenuProps = {
   onClose: () => void;
@@ -51,7 +43,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
           </button>
         </div>
         <nav className="grid" aria-label={t("navigation.allPages")}>
-          {menuItems.map((item) => (
+          {navigationItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
