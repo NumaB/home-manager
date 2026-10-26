@@ -13,7 +13,7 @@ export function PlaceholderPage({
 
   return (
     <section
-      className="min-h-[min(58vh,560px)] rounded-[20px] border border-burgundy/[0.12] bg-focused-background/[0.56] px-6 py-[26px] shadow-[0_8px_28px_rgb(72_46_15_/_4%)]"
+      className="min-h-[min(58vh,560px)] rounded-[20px] bg-light-background/[0.56] px-6 py-[26px]"
       aria-labelledby="page-title"
     >
       <h1

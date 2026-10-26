@@ -18,7 +18,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
     >
       <aside
         id="app-menu"
-        className="max-h-[min(72vh,620px)] w-full max-w-[520px] animate-rise-in overflow-y-auto rounded-[22px] border border-burgundy/[0.12] bg-focused-background px-5 pt-[22px] pb-[18px] shadow-[0_18px_50px_rgb(28_20_11_/_20%)]"
+        className="max-h-[min(72vh,620px)] w-full max-w-[520px] animate-rise-in overflow-y-auto rounded-[22px] border border-burgundy/[0.12] bg-light-background px-5 pt-[22px] pb-[18px] shadow-[0_18px_50px_rgb(28_20_11_/_20%)]"
         aria-label={t("navigation.menuLabel")}
         role="dialog"
         aria-modal="true"
@@ -34,7 +34,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
             </h2>
           </div>
           <button
-            className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-focused-background text-burgundy focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
+            className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-light-background text-burgundy focus-visible:bg-focused-background focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
             type="button"
             aria-label={t("navigation.closeMenu")}
             onClick={onClose}

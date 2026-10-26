@@ -1,6 +1,7 @@
 const colors = {
-  background: "#F6EAD4",
-  focusedBackground: "#FFF3DF",
+  background: "#F7DFB2",
+  lightBackground: "#FFF3DF",
+  focusedBackground: "#FAF0DC",
   primary: "#006849",
   lightPrimary: "#9BC472",
   secondary: "#493D33",

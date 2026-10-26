@@ -23,7 +23,7 @@ export function AppLayout() {
   }, [menuOpen, closeMenu]);
 
   return (
-    <div className="min-h-screen min-h-[100svh] bg-background pb-[calc(104px+env(safe-area-inset-bottom))] md:flex md:pb-0">
+    <div className="min-h-screen min-h-[100svh] bg-light-background pb-[calc(104px+env(safe-area-inset-bottom))] md:flex md:pb-0">
       <SideNavigation />
       <div className="min-w-0 flex-1">
         <AppHeader />

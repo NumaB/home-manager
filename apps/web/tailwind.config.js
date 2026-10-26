@@ -6,6 +6,7 @@ export default {
     extend: {
       colors: {
         background: colors.background,
+        "light-background": colors.lightBackground,
         "focused-background": colors.focusedBackground,
         primary: colors.primary,
         "light-primary": colors.lightPrimary,
