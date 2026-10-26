@@ -53,4 +53,4 @@ jobs:
           done
           curl --fail http://127.0.0.1:3001/api/health
           curl --fail --silent http://127.0.0.1:3001/api/docs | grep -q 'swagger-ui'
-          curl --fail --silent http://127.0.0.1:3001/api/docs-json | grep -q 'Home Manager API'
+          curl --fail --silent http://127.0.0.1:3001/api/docs-json | grep -q 'Doz Manager API'

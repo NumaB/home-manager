@@ -1,10 +1,10 @@
-# Home Manager — décisions et synthèse d’architecture
+# Doz Manager — décisions et synthèse d’architecture
 
 Ce document rassemble les décisions prises dans la discussion et les points qui restent ouverts. Il sert de contexte au prochain agent. Il ne vaut pas autorisation de déployer sur Scaleway ni de trancher les questions encore ouvertes.
 
 ## Contexte et objectif
 
-Home Manager est une application privée de gestion de maison. Le projet sert à développer en TypeScript tout en apprenant progressivement le full stack, l’infrastructure et le développement assisté par agent. L’application doit être une PWA. Le squelette du monorepo n’a pas encore été généré.
+Doz Manager est une application privée de gestion de maison. Le projet sert à développer en TypeScript tout en apprenant progressivement le full stack, l’infrastructure et le développement assisté par agent. L’application doit être une PWA. Le squelette du monorepo n’a pas encore été généré.
 
 Issues de référence :
 

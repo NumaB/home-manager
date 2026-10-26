@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Home Manager"
+    "name": "Doz Manager",
+    "shortName": "DM"
   },
   "navigation": {
     "main": "Main navigation",

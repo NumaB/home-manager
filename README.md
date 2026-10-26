@@ -1,6 +1,6 @@
-# Home Manager
+# Doz Manager
 
-Squelette local de l’application privée Home Manager. Les décisions d’architecture retenues et les sujets encore ouverts sont détaillés dans [`doc/architecture-decisions.md`](doc/architecture-decisions.md).
+Squelette local de l’application privée Doz Manager. Les décisions d’architecture retenues et les sujets encore ouverts sont détaillés dans [`doc/architecture-decisions.md`](doc/architecture-decisions.md).
 
 ## Prérequis
 

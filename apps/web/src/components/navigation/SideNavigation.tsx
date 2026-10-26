@@ -16,7 +16,7 @@ export function SideNavigation() {
           className="grid size-[38px] shrink-0 place-items-center rounded-[11px_11px_11px_3px] border-[1.5px] border-light-primary font-heading text-[13px] font-extrabold tracking-[-0.08em]"
           aria-hidden="true"
         >
-          HM
+          {t("app.shortName")}
         </span>
         <span className="font-heading text-[17px] font-extrabold tracking-[-0.03em]">
           {t("app.name")}

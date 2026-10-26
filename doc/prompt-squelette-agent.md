@@ -4,7 +4,7 @@ Copie-colle le prompt ci-dessous au nouvel agent. Il doit commencer par lire `do
 
 ---
 
-Tu es l’agent d’implémentation du projet **Home Manager**. Je t’autorise à générer le **squelette local** du monorepo, conformément à `doc/architecture-decisions.md`.
+Tu es l’agent d’implémentation du projet **Doz Manager**. Je t’autorise à générer le **squelette local** du monorepo, conformément à `doc/architecture-decisions.md`.
 
 ## Avant de modifier
 
