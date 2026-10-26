@@ -18,7 +18,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
     >
       <aside
         id="app-menu"
-        className="max-h-[min(72vh,620px)] w-full max-w-[520px] animate-rise-in overflow-y-auto rounded-[22px] border border-burgundy/[0.12] bg-paper-light px-5 pt-[22px] pb-[18px] shadow-[0_18px_50px_rgb(28_20_11_/_20%)]"
+        className="max-h-[min(72vh,620px)] w-full max-w-[520px] animate-rise-in overflow-y-auto rounded-[22px] border border-burgundy/[0.12] bg-focused-background px-5 pt-[22px] pb-[18px] shadow-[0_18px_50px_rgb(28_20_11_/_20%)]"
         aria-label={t("navigation.menuLabel")}
         role="dialog"
         aria-modal="true"
@@ -29,12 +29,12 @@ export function AppMenu({ onClose }: AppMenuProps) {
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-burgundy">
               {t("navigation.section")}
             </p>
-            <h2 className="m-0 font-heading text-[27px] font-extrabold tracking-[-0.055em] text-teal">
+            <h2 className="m-0 font-heading text-[27px] font-extrabold tracking-[-0.055em] text-primary">
               {t("navigation.menuTitle")}
             </h2>
           </div>
           <button
-            className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-[#f3e4ca] text-burgundy focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
+            className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-focused-background text-burgundy focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
             type="button"
             aria-label={t("navigation.closeMenu")}
             onClick={onClose}
@@ -47,10 +47,10 @@ export function AppMenu({ onClose }: AppMenuProps) {
             <Link
               key={item.to}
               to={item.to}
-              className="flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-[#332820] no-underline focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
+              className="flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-secondary no-underline focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
               activeProps={{
                 className:
-                  "flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-teal no-underline focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]",
+                  "flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-primary no-underline focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]",
               }}
               onClick={onClose}
             >

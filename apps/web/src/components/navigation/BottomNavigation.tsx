@@ -18,7 +18,7 @@ export function BottomNavigation({
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-20 mx-auto grid min-h-[82px] w-full max-w-[760px] grid-cols-4 gap-[5px] rounded-t-[18px] border-t border-burgundy/10 bg-paper-light px-[18px] pt-2 pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-4px_15px_rgb(78_55_20_/_8%)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 mx-auto grid min-h-[82px] w-full max-w-[760px] grid-cols-4 gap-[5px] rounded-t-[18px] border-t border-burgundy/10 bg-focused-background px-[18px] pt-2 pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-4px_15px_rgb(78_55_20_/_8%)] md:hidden"
       aria-label={t("navigation.main")}
     >
       <BottomNavLink
@@ -43,7 +43,7 @@ export function BottomNavigation({
         <Icons name="tools" width={30} />
       </BottomNavLink>
       <button
-        className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer text-[#493d33] transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-[#f3e4ca] focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]${menuOpen ? " bg-[#f3e4ca] text-teal" : ""}`}
+        className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer text-secondary transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-focused-background focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]${menuOpen ? " bg-focused-background text-primary" : ""}`}
         type="button"
         aria-label={t("navigation.openMenu")}
         aria-expanded={menuOpen}
@@ -67,7 +67,7 @@ function BottomNavLink({ to, label, active, children }: BottomNavLinkProps) {
   return (
     <Link
       to={to}
-      className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer text-[#493d33] no-underline transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-[#f3e4ca] focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]${active ? " bg-[#f3e4ca] text-teal" : ""}`}
+      className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer text-secondary no-underline transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-focused-background focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]${active ? " bg-focused-background text-primary" : ""}`}
       aria-label={label}
       aria-current={active ? "page" : undefined}
     >

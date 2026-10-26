@@ -10,10 +10,10 @@ export function SideNavigation() {
   });
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 flex-col border-r border-burgundy/10 bg-paper-light px-5 py-7 md:flex">
-      <div className="mb-10 flex items-center gap-3 px-2 text-teal">
+    <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 flex-col border-r border-burgundy/10 bg-focused-background px-5 py-7 md:flex">
+      <div className="mb-10 flex items-center gap-3 px-2 text-primary">
         <span
-          className="grid size-[38px] shrink-0 place-items-center rounded-[11px_11px_11px_3px] border-[1.5px] border-current font-heading text-[13px] font-extrabold tracking-[-0.08em]"
+          className="grid size-[38px] shrink-0 place-items-center rounded-[11px_11px_11px_3px] border-[1.5px] border-light-primary font-heading text-[13px] font-extrabold tracking-[-0.08em]"
           aria-hidden="true"
         >
           HM
@@ -33,7 +33,7 @@ export function SideNavigation() {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex min-h-12 items-center gap-3 rounded-xl px-3 font-semibold no-underline transition-colors hover:bg-[#f3e4ca] focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-2 ${active ? "bg-[#f3e4ca] text-teal" : "text-[#493d33]"}`}
+              className={`flex min-h-12 items-center gap-3 rounded-xl px-3 font-semibold no-underline transition-colors hover:bg-focused-background focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-2 ${active ? "bg-focused-background text-primary" : "text-secondary"}`}
               aria-current={active ? "page" : undefined}
             >
               <Icons name={item.icon} width={22} className="shrink-0" />
