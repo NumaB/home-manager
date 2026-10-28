@@ -58,7 +58,9 @@ La CI GitHub Actions exécute ces contrôles et des tests de démarrage HTTP sur
 
 `.env.example` ne contient que des valeurs de développement sans secret. Copiez-le en `.env` pour le développement local ; les fichiers `.env` réels sont ignorés par Git. L’API attend `DATABASE_URL` et utilise `API_PORT` (3001 par défaut). Le web utilise `WEB_PORT` (3000 par défaut).
 
-Clerk est le fournisseur d’authentification retenu, mais son intégration est volontairement absente de ce squelette : ni clé Clerk ni compte Clerk ne sont nécessaires pour démarrer le web ou l’API. Il n’y a pas d’authentification factice ni de garde de sécurité contournable. Le navigateur ne se connecte pas à PostgreSQL.
+Clerk est intégré à `apps/web` avec l’instance de développement du compte Clerk du projet. Le CLI crée `apps/web/.env.local` avec les clés locales ; ce fichier est ignoré par Git. Pour un nouveau clone, connectez le CLI à l’application Clerk choisie puis récupérez ses clés de développement depuis `apps/web` avec `npx -y clerk@latest env pull`. Ne commitez jamais ces clés et n’utilisez pas les clés de production en local.
+
+L’instance Clerk de développement est configurée en mode **Invite-only**. La connexion se fait sur `/sign-in` et les inscriptions ne sont possibles qu’avec un lien d’invitation Clerk valide. Les routes de l’application sous `/_app` redirigent les visiteurs non authentifiés vers la connexion. L’intégration de vérification des jetons dans NestJS et le rattachement des identités Clerk aux membres PostgreSQL restent à implémenter ; les futurs endpoints métier ne devront pas être considérés comme protégés avant cette étape. Le health check actuel reste public. Le navigateur ne se connecte pas à PostgreSQL.
 
 Le schéma Prisma initial ne contient aucun modèle métier. Aucun flux de réservation, approbation, vote ou administration n’est implémenté.
 
@@ -74,7 +76,7 @@ Ce dépôt n’entérine pas les décisions non prises dans le document d’arch
 
 - région, produits et dimensionnement Scaleway, réseau, domaine/DNS, coût réel et configuration d’hébergement ; aucun déploiement ou Terraform n’est inclus ;
 - mécanisme d’état distant Terraform et ownership de l’instance PostgreSQL partagée ; isolation des identifiants recette/production et stratégie/rétention de sauvegarde à préciser ;
-- vérification de la prise en charge actuelle de Yahoo par Clerk et mécanisme d’admission des membres ;
+- vérification de la prise en charge actuelle de Yahoo par Clerk et définition du parcours d’invitation/rattachement d’un compte Clerk à un membre PostgreSQL ;
 - déclencheur du déploiement en recette ;
 - questions fonctionnelles de quorum et conséquences des changements de membres pendant un vote.
 

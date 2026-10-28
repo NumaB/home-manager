@@ -37,6 +37,7 @@ Issues de référence :
 - **Clerk** est le service d’authentification géré retenu.
 - Flux retenu : TanStack Start transmet un jeton de session Clerk à NestJS ; NestJS vérifie le jeton puis retrouve l’utilisateur interne et applique les autorisations.
 - Les rôles métier (`utilisateur`, `administrateur`) appartiennent à l’application et sont contrôlés côté API, pas uniquement dans l’interface.
+- L’accès est **sur invitation explicite**. L’instance Clerk de développement du projet est configurée en mode **Invite-only** ; le parcours d’inscription n’accepte qu’un lien d’invitation valide.
 - La connexion sociale Google/Yahoo est souhaitée. La compatibilité spécifique de Yahoo avec Clerk reste à vérifier avant de la considérer comme acquise.
 - Les identifiants, secrets et clés ne doivent pas être commis dans Git ni inscrits en clair dans la configuration Terraform.
 
@@ -90,6 +91,6 @@ Des questions fonctionnelles restent volontairement ouvertes, notamment la défi
 - Choisir le mécanisme de stockage distant des états Terraform et la gestion/injection des secrets.
 - Définir comment la ressource PostgreSQL partagée est possédée par Terraform et comment chaque environnement obtient ses identifiants séparés.
 - Décider si la cible de 25 €/mois inclut TVA et domaine, puis recalculer le coût réel.
-- Vérifier la connexion Yahoo dans Clerk et décider comment les membres sont admis dans l’application (invitations/liste autorisée/etc.).
+- Vérifier la connexion Yahoo dans Clerk et définir le parcours d’invitation ainsi que le rattachement des identités Clerk aux membres PostgreSQL.
 - Définir le déclencheur et les validations du déploiement en recette.
 - Finaliser les règles fonctionnelles de quorum restées ouvertes avant d’implémenter complètement l’approbation.

@@ -3,6 +3,9 @@
     "name": "Doz Manager",
     "shortName": "DM"
   },
+  "auth": {
+    "signIn": "Sign in"
+  },
   "navigation": {
     "main": "Main navigation",
     "calendar": "Calendar",
