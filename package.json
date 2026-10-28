@@ -13,6 +13,7 @@
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f postgres",
     "typecheck": "pnpm --recursive typecheck",
+    "format": "prettier --write .",
     "lint": "prettier --check .",
     "test": "pnpm --recursive test",
     "build": "pnpm --recursive build",

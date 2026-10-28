@@ -7,18 +7,18 @@
 - [ ] Créer/sélectionner une instance Clerk dédiée à la recette et une autre dédiée à la production. Vérifier le type d’instance et les domaines personnalisés requis par Clerk pour chacun de ces environnements.
 - [ ] Confirmer les méthodes de connexion souhaitées. Google est prévu ; la prise en charge de Yahoo reste à vérifier avant de l’activer ou de la promettre.
 - [ ] Configurer, pour chaque instance, le domaine HTTPS de l’application, les URL de redirection autorisées et les URL de connexion/inscription.
-- [ ] Configurer les règles d’accès conformément au produit (l’instance locale actuelle est *Invite-only*). Prévoir qui peut inviter des membres et comment les invitations seront émises.
+- [ ] Configurer les règles d’accès conformément au produit (l’instance locale actuelle est _Invite-only_). Prévoir qui peut inviter des membres et comment les invitations seront émises.
 - [ ] Préparer les invitations et le processus d’amorçage du premier administrateur pour chaque environnement ; vérifier que l’opération vise la bonne base et la bonne instance Clerk.
 
 ## Variables à injecter par environnement
 
-| Variable | Où / usage | Vérifications |
-| --- | --- | --- |
-| `VITE_CLERK_PUBLISHABLE_KEY` | Web, au **build** ; clé publique de l’instance Clerk de cet environnement | Correspond à l’instance utilisée par l’API. Une clé publishable est publique, mais doit rester propre à l’environnement. |
-| `CLERK_SECRET_KEY` | API, au **runtime**, comme secret | Secret de la même instance que la clé publishable ; ne pas l’inclure dans l’image web, les artefacts client, le dépôt ou les logs. |
-| `CLERK_AUTHORIZED_PARTIES` | API, au runtime | Définir explicitement l’origine HTTPS exacte du web (schéma + hôte, sans chemin), ou la liste d’origines permises séparées par des virgules. Le claim `azp` des jetons doit correspondre. Cette variable est exigée par l’API en production. |
-| `WEB_ORIGINS` | API, au runtime, configuration CORS | Origine(s) web de cet environnement uniquement ; liste séparée par des virgules si nécessaire. Ce réglage CORS ne remplace pas `CLERK_AUTHORIZED_PARTIES`. |
-| `VITE_API_BASE_URL` | Web, au **build** | URL HTTPS de l’API de cet environnement, avec le préfixe `/api` (par exemple `https://api.example.tld/api`). |
+| Variable                     | Où / usage                                                                | Vérifications                                                                                                                                                                                                                                |
+| ---------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Web, au **build** ; clé publique de l’instance Clerk de cet environnement | Correspond à l’instance utilisée par l’API. Une clé publishable est publique, mais doit rester propre à l’environnement.                                                                                                                     |
+| `CLERK_SECRET_KEY`           | API, au **runtime**, comme secret                                         | Secret de la même instance que la clé publishable ; ne pas l’inclure dans l’image web, les artefacts client, le dépôt ou les logs.                                                                                                           |
+| `CLERK_AUTHORIZED_PARTIES`   | API, au runtime                                                           | Définir explicitement l’origine HTTPS exacte du web (schéma + hôte, sans chemin), ou la liste d’origines permises séparées par des virgules. Le claim `azp` des jetons doit correspondre. Cette variable est exigée par l’API en production. |
+| `WEB_ORIGINS`                | API, au runtime, configuration CORS                                       | Origine(s) web de cet environnement uniquement ; liste séparée par des virgules si nécessaire. Ce réglage CORS ne remplace pas `CLERK_AUTHORIZED_PARTIES`.                                                                                   |
+| `VITE_API_BASE_URL`          | Web, au **build**                                                         | URL HTTPS de l’API de cet environnement, avec le préfixe `/api` (par exemple `https://api.example.tld/api`).                                                                                                                                 |
 
 - [ ] Injecter les valeurs par environnement depuis le gestionnaire de secrets/configuration de la plateforme, sans les inscrire dans Git ni les passer dans une variable publique du build, sauf `VITE_CLERK_PUBLISHABLE_KEY` et `VITE_API_BASE_URL` qui sont destinées au client.
 - [ ] Vérifier que le processus de build web reçoit les valeurs `VITE_*` de l’environnement cible et que l’API reçoit sa propre `CLERK_SECRET_KEY` au démarrage.

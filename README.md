@@ -44,6 +44,7 @@ La base de Compose est réservée au développement : elle n’est publiée que 
 ## Contrôles
 
 ```sh
+pnpm format     # applique le formatage Prettier
 pnpm lint       # vérification du formatage Prettier
 pnpm typecheck  # TypeScript et génération du client Prisma
 pnpm test       # tests unitaires minimaux des deux applications
