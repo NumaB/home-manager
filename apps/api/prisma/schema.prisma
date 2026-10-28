@@ -6,3 +6,19 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum MemberRole {
+  USER
+  ADMIN
+}
+
+model Member {
+  id          String     @id @default(cuid())
+  clerkUserId String     @unique
+  role        MemberRole @default(USER)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("members")
+}

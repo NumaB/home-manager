@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Icons } from "../Icons";
+import { AuthControls } from "../auth/AuthControls";
 import { navigationItems } from "./navigationItems";
 
 export function SideNavigation() {
@@ -42,6 +43,7 @@ export function SideNavigation() {
           );
         })}
       </nav>
+      <AuthControls className="mt-auto border-t border-burgundy/10 pt-4" />
     </aside>
   );
 }

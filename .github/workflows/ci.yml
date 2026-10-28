@@ -27,6 +27,9 @@ jobs:
           --health-retries 10
     env:
       DATABASE_URL: postgresql://home_manager@localhost:5432/home_manager_ci?schema=public
+      CLERK_SECRET_KEY: sk_test_ci_placeholder
+      CLERK_AUTHORIZED_PARTIES: http://localhost:3000
+      WEB_ORIGINS: http://localhost:3000
       NODE_ENV: test
     steps:
       - uses: actions/checkout@v4
@@ -38,8 +41,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Validate Prisma schema against temporary PostgreSQL
-        run: pnpm --filter @home-manager/api db:push
+      - name: Apply Prisma migrations to temporary PostgreSQL
+        run: pnpm --filter @home-manager/api db:migrate:deploy
       - name: Typecheck, test, format and build
         run: pnpm check
       - name: Smoke test API and Swagger UI
@@ -52,5 +55,6 @@ jobs:
             sleep 2
           done
           curl --fail http://127.0.0.1:3001/api/health
+          curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3001/api/auth/me | grep -q '401'
           curl --fail --silent http://127.0.0.1:3001/api/docs | grep -q 'swagger-ui'
           curl --fail --silent http://127.0.0.1:3001/api/docs-json | grep -q 'Doz Manager API'

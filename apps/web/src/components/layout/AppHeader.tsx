@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { AuthControls } from "../auth/AuthControls";
 
 export function AppHeader() {
   const { t } = useTranslation();
@@ -14,6 +15,7 @@ export function AppHeader() {
       <span className="font-heading text-base font-extrabold tracking-[-0.03em]">
         {t("app.name")}
       </span>
+      <AuthControls className="ml-auto" />
     </header>
   );
 }

@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 import {
   createRootRoute,
   HeadContent,
@@ -32,9 +33,11 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body>
-        <AppStoreProvider>
-          <Outlet />
-        </AppStoreProvider>
+        <ClerkProvider>
+          <AppStoreProvider>
+            <Outlet />
+          </AppStoreProvider>
+        </ClerkProvider>
         <Scripts />
       </body>
     </html>
