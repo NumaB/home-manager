@@ -5,6 +5,7 @@ import { AppMenu } from "../navigation/AppMenu";
 import { BottomNavigation } from "../navigation/BottomNavigation";
 import { SideNavigation } from "../navigation/SideNavigation";
 import { useAppStore } from "@stores/app-store-provider";
+import { MemberSessionSync } from "../auth/MemberSessionSync";
 
 export function AppLayout() {
   const menuOpen = useAppStore((state) => state.isMenuOpen);
@@ -28,6 +29,7 @@ export function AppLayout() {
       <div className="min-w-0 flex-1">
         <AppHeader />
         <main className="mx-auto w-full max-w-[760px] px-6 pt-7 pb-11 md:max-w-[1040px] md:px-10 md:pt-10">
+          <MemberSessionSync />
           <Outlet />
         </main>
       </div>

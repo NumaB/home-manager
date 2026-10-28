@@ -35,10 +35,11 @@ Issues de référence :
 ### Authentification et autorisation
 
 - **Clerk** est le service d’authentification géré retenu.
-- Flux retenu : TanStack Start transmet un jeton de session Clerk à NestJS ; NestJS vérifie le jeton puis retrouve l’utilisateur interne et applique les autorisations.
-- Les rôles métier (`utilisateur`, `administrateur`) appartiennent à l’application et sont contrôlés côté API, pas uniquement dans l’interface.
-- L’accès est **sur invitation explicite**. L’instance Clerk de développement du projet est configurée en mode **Invite-only** ; le parcours d’inscription n’accepte qu’un lien d’invitation valide.
-- La connexion sociale Google/Yahoo est souhaitée. La compatibilité spécifique de Yahoo avec Clerk reste à vérifier avant de la considérer comme acquise.
+- Flux implémenté : TanStack Start transmet le jeton de session Clerk dans `Authorization: Bearer …` ; NestJS vérifie le jeton avec `@clerk/backend`, retrouve/crée le membre interne et applique les autorisations.
+- Les rôles métier (`USER`, `ADMIN`, correspondant à `utilisateur`, `administrateur`) appartiennent à PostgreSQL et sont contrôlés côté API, pas uniquement dans l’interface. Tout endpoint est protégé par défaut ; seules les routes marquées explicitement publiques, dont le health check, sont accessibles sans session.
+- L’accès est **sur invitation explicite**. L’instance Clerk de développement du projet est configurée en mode **Invite-only** ; le parcours d’inscription n’accepte qu’un lien d’invitation valide. Un compte Clerk admis est créé dans la table `members` au premier appel authentifié et reçoit le rôle utilisateur par défaut.
+- Le premier administrateur est attribué par une commande locale contrôlée qui vérifie l’identité Clerk et met à jour le rôle en base ; aucun endpoint public n’accorde ce rôle.
+- La connexion sociale Google/Yahoo est souhaitée. Google est disponible comme connexion native dans le schéma Clerk actuel ; Yahoo doit être vérifié avant de le considérer comme pris en charge.
 - Les identifiants, secrets et clés ne doivent pas être commis dans Git ni inscrits en clair dans la configuration Terraform.
 
 ### Environnements et hébergement
@@ -91,6 +92,6 @@ Des questions fonctionnelles restent volontairement ouvertes, notamment la défi
 - Choisir le mécanisme de stockage distant des états Terraform et la gestion/injection des secrets.
 - Définir comment la ressource PostgreSQL partagée est possédée par Terraform et comment chaque environnement obtient ses identifiants séparés.
 - Décider si la cible de 25 €/mois inclut TVA et domaine, puis recalculer le coût réel.
-- Vérifier la connexion Yahoo dans Clerk et définir le parcours d’invitation ainsi que le rattachement des identités Clerk aux membres PostgreSQL.
+- Vérifier Yahoo et choisir les méthodes finales de connexion ; configurer des instances Clerk distinctes adaptées à la recette et à la production.
 - Définir le déclencheur et les validations du déploiement en recette.
 - Finaliser les règles fonctionnelles de quorum restées ouvertes avant d’implémenter complètement l’approbation.

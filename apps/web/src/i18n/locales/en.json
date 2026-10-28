@@ -4,7 +4,8 @@
     "shortName": "DM"
   },
   "auth": {
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "apiUnavailable": "Your session is valid, but the API is unavailable. Please try again shortly."
   },
   "navigation": {
     "main": "Main navigation",

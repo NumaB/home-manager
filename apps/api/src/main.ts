@@ -1,19 +1,31 @@
 import "reflect-metadata";
-import dotenv from "dotenv";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
-
-dotenv.config({ path: "../../.env" });
+import "./config/load-local-env";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("api");
 
+  const allowedOrigins = (process.env.WEB_ORIGINS ?? "http://localhost:3000")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  app.enableCors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  });
+
   const openApiConfig = new DocumentBuilder()
     .setTitle("Doz Manager API")
     .setDescription("API REST de Doz Manager")
     .setVersion("0.0.0")
+    .addBearerAuth(
+      { type: "http", scheme: "bearer", bearerFormat: "JWT" },
+      "clerk-session",
+    )
     .build();
   const openApiDocument = SwaggerModule.createDocument(app, openApiConfig);
 

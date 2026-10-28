@@ -4,7 +4,8 @@
     "shortName": "DM"
   },
   "auth": {
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "apiUnavailable": "Votre session est valide, mais l’API ne répond pas. Réessayez dans un instant."
   },
   "navigation": {
     "main": "Navigation principale",
