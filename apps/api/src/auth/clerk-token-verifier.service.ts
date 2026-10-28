@@ -35,15 +35,26 @@ export class ClerkTokenVerifier {
   }
 
   async verifySessionToken(token: string): Promise<string> {
-    const result = await verifyToken(token, {
-      secretKey: this.secretKey,
-      authorizedParties: this.authorizedParties,
-    });
-
-    if (result.errors || !result.data?.sub) {
+    let payload;
+    try {
+      payload = await verifyToken(token, {
+        secretKey: this.secretKey,
+        authorizedParties: this.authorizedParties,
+      });
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Clerk verifyToken failed:", error);
+      }
       throw new Error("The Clerk session token is invalid");
     }
 
-    return result.data.sub;
+    if (typeof payload.sub !== "string") {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Clerk verified a token without a subject claim");
+      }
+      throw new Error("The Clerk session token is invalid");
+    }
+
+    return payload.sub;
   }
 }
