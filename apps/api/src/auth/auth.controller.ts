@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Inject } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -6,32 +6,28 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { Member } from "@prisma/client";
+import { CurrentMemberResponseDto } from "@/openapi/dtos/members.dto";
 import { CurrentMember } from "./auth.decorators";
-
-type CurrentMemberResponse = Pick<Member, "id" | "role" | "isActive">;
+import { MemberService } from "./member.service";
 
 @ApiTags("auth")
 @ApiBearerAuth("clerk-session")
 @Controller("auth")
 export class AuthController {
+  constructor(@Inject(MemberService) private readonly members: MemberService) {}
+
   @Get("me")
   @ApiOperation({ summary: "Retourne le membre applicatif connecté" })
-  @ApiOkResponse({
-    schema: {
-      type: "object",
-      properties: {
-        id: { type: "string" },
-        role: { type: "string", enum: ["USER", "ADMIN"] },
-        isActive: { type: "boolean" },
-      },
-      required: ["id", "role", "isActive"],
-    },
-  })
-  getCurrentMember(@CurrentMember() member: Member): CurrentMemberResponse {
+  @ApiOkResponse({ type: CurrentMemberResponseDto })
+  async getCurrentMember(
+    @CurrentMember() currentMember: Member,
+  ): Promise<CurrentMemberResponseDto> {
+    const member = await this.members.syncDisplayName(currentMember);
     return {
       id: member.id,
       role: member.role,
       isActive: member.isActive,
+      displayName: member.displayName,
     };
   }
 }

@@ -4,7 +4,7 @@ Ce document rassemble les décisions prises dans la discussion et les points qui
 
 ## Contexte et objectif
 
-Doz Manager est une application privée de gestion de maison. Le projet sert à développer en TypeScript tout en apprenant progressivement le full stack, l’infrastructure et le développement assisté par agent. L’application doit être une PWA. Le squelette du monorepo n’a pas encore été généré.
+Doz Manager est une application privée de gestion de maison. Le projet sert à développer en TypeScript tout en apprenant progressivement le full stack, l’infrastructure et le développement assisté par agent. L’application doit être une PWA. Le monorepo technique est en place et les premières fonctionnalités métier, dont le calendrier des réservations, sont en cours d’implémentation.
 
 Issues de référence :
 
@@ -77,11 +77,13 @@ Les détails sont consignés dans l’issue #2. Repères importants pour ne pas 
 - Tous les membres peuvent consulter et créer des réservations ; le créateur est identifié par sa connexion. Les chevauchements sont autorisés, avec avertissement non bloquant.
 - Le créateur peut modifier ou annuler sa réservation. Une modification des dates réinitialise les approbations.
 - L’approbation est désactivée par défaut. Désactivée, une nouvelle réservation est validée immédiatement ; activée, elle est en attente.
-- Tous les membres, y compris le créateur, votent. Les votes sont modifiables tant que la demande est en attente.
-- Le seuil est **la moitié ou plus du nombre total de membres** (`ceil(total / 2)`) : par exemple 4/8 et 4/7 atteignent le seuil, 3/7 non. Le seuil d’approbations valide la réservation ; le seuil de votes défavorables la supprime.
-- Tout changement effectif du réglage d’approbation valide automatiquement les demandes encore en attente.
+- À l’ouverture d’un vote, l’électorat est figé à partir des membres actifs à cet instant, créateur compris. Les membres ajoutés ou activés ultérieurement ne sont pas ajoutés à ce vote.
+- Si un membre est désactivé pendant un vote, il est retiré de l’électorat de cette réservation, son vote éventuel est supprimé et le quorum est recalculé. Une réactivation ne le réintègre pas au vote en cours.
+- Le seuil est **la moitié ou plus de l’électorat courant de la réservation** (`ceil(total / 2)`) : par exemple 4/8 et 4/7 atteignent le seuil, 3/7 non. Le seuil d’approbations valide la réservation ; le seuil de votes défavorables la supprime. Si les deux seuils sont atteints simultanément après le retrait d’un membre, le rejet prévaut.
+- Les votes sont modifiables tant que la demande est en attente. Modifier les dates réinitialise les votes et, si l’approbation est activée, ouvre un nouveau vote avec l’électorat actif à cet instant ; si elle est désactivée, la réservation est validée.
+- Le réglage est global à la maison. Sa modification est réservée aux administrateurs et sera pilotée par une page d’administration à développer ultérieurement. Tout changement effectif du réglage valide automatiquement les demandes encore en attente.
 
-Des questions fonctionnelles restent volontairement ouvertes, notamment la définition exacte des membres comptés dans le quorum et l’effet d’un changement de composition des membres durant un vote. Ne pas inventer ces réponses ni prétendre qu’elles sont décidées.
+Ces règles de quorum et de changement de membres sont arrêtées ; elles ne constituent plus des questions ouvertes.
 
 ## Décisions encore ouvertes avant le déploiement
 
@@ -94,4 +96,3 @@ Des questions fonctionnelles restent volontairement ouvertes, notamment la défi
 - Décider si la cible de 25 €/mois inclut TVA et domaine, puis recalculer le coût réel.
 - Vérifier Yahoo et choisir les méthodes finales de connexion ; configurer des instances Clerk distinctes adaptées à la recette et à la production.
 - Définir le déclencheur et les validations du déploiement en recette.
-- Finaliser les règles fonctionnelles de quorum restées ouvertes avant d’implémenter complètement l’approbation.

@@ -13,6 +13,7 @@
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f postgres",
     "typecheck": "pnpm --recursive typecheck",
+    "generate:api-types": "pnpm --filter @home-manager/api generate:openapi && pnpm --filter @home-manager/web generate:api-types",
     "format": "prettier --write .",
     "lint": "prettier --check .",
     "test": "pnpm --recursive test",

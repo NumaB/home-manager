@@ -17,6 +17,10 @@ export default defineConfig(({ mode }) => {
         ),
         "@features": fileURLToPath(new URL("./src/features", import.meta.url)),
         "@stores": fileURLToPath(new URL("./src/stores", import.meta.url)),
+        "@lib": fileURLToPath(new URL("./src/lib", import.meta.url)),
+        "@generated": fileURLToPath(
+          new URL("./src/generated", import.meta.url),
+        ),
       },
     },
     server: { host: "0.0.0.0", port },

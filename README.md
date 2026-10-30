@@ -1,6 +1,6 @@
 # Doz Manager
 
-Squelette local de l’application privée Doz Manager. Les décisions d’architecture retenues et les sujets encore ouverts sont détaillés dans [`doc/architecture-decisions.md`](doc/architecture-decisions.md).
+Application privée de gestion de maison Doz Manager. Les décisions d’architecture retenues et les sujets encore ouverts sont détaillés dans [`doc/architecture-decisions.md`](doc/architecture-decisions.md).
 
 ## Prérequis
 
@@ -61,9 +61,9 @@ La CI GitHub Actions exécute ces contrôles et des tests de démarrage HTTP sur
 
 Clerk est intégré à `apps/web` et NestJS. En local, le CLI écrit les clés de développement dans `apps/web/.env.local` (ignoré par Git) ; l’API lit sa clé secrète depuis ce fichier uniquement pour le développement local. Pour un nouveau clone, authentifiez le CLI et récupérez les clés de l’application choisie depuis `apps/web` avec `npx -y clerk@latest env pull`. En recette et en production, configurez séparément `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_AUTHORIZED_PARTIES`, `WEB_ORIGINS` et `VITE_API_BASE_URL` avec les valeurs propres à chaque environnement. La clé publishable et les variables `VITE_*` sont intégrées au build web ; `CLERK_SECRET_KEY` est un secret runtime de l’API et ne doit jamais être une variable de build publique. Consultez la [checklist de déploiement Clerk](doc/clerk-deployment-checklist.md) avant chaque mise en service. Ne partagez pas les clés de développement et de production.
 
-L’instance Clerk de développement est en mode **Invite-only**. La connexion se fait sur `/sign-in` et une inscription requiert un lien d’invitation valide. Les routes web sous `/_app` redirigent les visiteurs non authentifiés vers la connexion. NestJS vérifie le jeton Bearer Clerk sur toutes les routes sauf celles marquées explicitement publiques (`/api/health`), rattache l’identité à un membre PostgreSQL et attribue par défaut le rôle `USER`. `/api/auth/me` expose le membre courant ; `useApiClient()` transmet le jeton de session aux futurs appels REST.
+L’instance Clerk de développement est en mode **Invite-only**. La connexion se fait sur `/sign-in` et une inscription requiert un lien d’invitation valide. Les routes web sous `/_app` redirigent les visiteurs non authentifiés vers la connexion. NestJS vérifie le jeton Bearer Clerk sur toutes les routes sauf celles marquées explicitement publiques (`/api/health`), rattache l’identité à un membre PostgreSQL et attribue par défaut le rôle `USER`. `/api/auth/me` expose le membre courant et synchronise au mieux son nom depuis Clerk ; `useApiClient()` transmet le jeton de session aux appels REST.
 
-Les rôles applicatifs restent en base. Aucun rôle n’est modifiable depuis le navigateur. Le schéma ne contient pas encore les modèles métier de réservation, approbation, vote ou administration.
+Les rôles applicatifs restent en base. Aucun rôle n’est modifiable depuis le navigateur. Le calendrier des réservations est implémenté sur `/` : affichage mensuel, création, modification et annulation, signalement non bloquant des chevauchements et votes lorsque l’approbation est activée. Les endpoints d’administration du réglage d’approbation et de désactivation des membres sont réservés aux `ADMIN` ; la page d’administration correspondante reste à développer.
 
 ### Bootstrap du premier administrateur
 
@@ -92,7 +92,6 @@ Ce dépôt n’entérine pas les décisions non prises dans le document d’arch
 - création/configuration des instances Clerk dédiées à la recette et à la production (voir la [checklist de déploiement Clerk](doc/clerk-deployment-checklist.md)) ;
 - déclencheur du déploiement en recette ;
 - automatisation éventuelle des invitations Clerk depuis l’interface d’administration (les invitations se gèrent pour l’instant dans Clerk).
-- questions fonctionnelles de quorum et conséquences des changements de membres pendant un vote.
 
 La PWA est une exigence du produit, mais le présent squelette n’ajoute pas encore de manifeste, service worker ou politique de cache hors ligne ; ces éléments restent une prochaine étape technique et ne sont pas implicites dans le rendu web minimal.
 

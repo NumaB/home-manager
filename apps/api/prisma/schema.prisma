@@ -12,13 +12,67 @@ enum MemberRole {
   ADMIN
 }
 
+enum ReservationStatus {
+  PENDING
+  APPROVED
+}
+
+enum ReservationVoteChoice {
+  APPROVE
+  REJECT
+}
+
 model Member {
-  id          String     @id @default(cuid())
-  clerkUserId String     @unique
-  role        MemberRole @default(USER)
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id                   String             @id @default(cuid())
+  clerkUserId          String             @unique
+  displayName          String             @default("Membre")
+  role                 MemberRole         @default(USER)
+  isActive             Boolean            @default(true)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  reservations         Reservation[]      @relation("ReservationCreator")
+  reservationVoters    ReservationVoter[]
 
   @@map("members")
+}
+
+model Reservation {
+  id          String               @id @default(cuid())
+  creatorId   String
+  startDate   DateTime             @db.Date
+  endDate     DateTime             @db.Date
+  status      ReservationStatus
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  creator     Member               @relation("ReservationCreator", fields: [creatorId], references: [id], onDelete: Restrict)
+  voters      ReservationVoter[]
+
+  @@index([startDate, endDate])
+  @@index([status])
+  @@map("reservations")
+}
+
+// This table is also the frozen electorate for a reservation. Removing a
+// member from an active vote deletes their row; members added later are never
+// added to an already pending reservation.
+model ReservationVoter {
+  reservationId String                 @map("reservation_id")
+  memberId      String                 @map("member_id")
+  choice        ReservationVoteChoice?
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime               @updatedAt @map("updated_at")
+  reservation   Reservation            @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  member        Member                 @relation(fields: [memberId], references: [id], onDelete: Restrict)
+
+  @@id([reservationId, memberId])
+  @@index([memberId])
+  @@map("reservation_voters")
+}
+
+model BookingSettings {
+  id               String   @id @default("global")
+  approvalEnabled  Boolean  @default(false) @map("approval_enabled")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("booking_settings")
 }
