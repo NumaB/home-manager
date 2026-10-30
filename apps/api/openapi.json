@@ -1,0 +1,460 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/me": {
+      "get": {
+        "operationId": "AuthController_getCurrentMember",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Retourne le membre applicatif connecté",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "ok"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Vérifie que l’API est démarrée",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/reservations": {
+      "get": {
+        "operationId": "ReservationsController_listForMonth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Réservations du mois et compteurs de vote",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReservationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Liste les réservations qui chevauchent un mois",
+        "tags": [
+          "reservations"
+        ]
+      },
+      "post": {
+        "operationId": "ReservationsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationDatesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Crée une réservation pour le membre connecté",
+        "tags": [
+          "reservations"
+        ]
+      }
+    },
+    "/api/reservations/overlaps": {
+      "get": {
+        "operationId": "ReservationsController_findOverlaps",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReservationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Recherche les réservations chevauchant une période",
+        "tags": [
+          "reservations"
+        ]
+      }
+    },
+    "/api/reservations/{id}": {
+      "patch": {
+        "operationId": "ReservationsController_updateDates",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationDatesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Modifie les dates d'une réservation du membre",
+        "tags": [
+          "reservations"
+        ]
+      },
+      "delete": {
+        "operationId": "ReservationsController_cancel",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Réservation annulée"
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Annule une réservation du membre connecté",
+        "tags": [
+          "reservations"
+        ]
+      }
+    },
+    "/api/reservations/{id}/vote": {
+      "put": {
+        "operationId": "ReservationsController_vote",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationVoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Vote ou modifie le vote d'une demande en attente",
+        "tags": [
+          "reservations"
+        ]
+      }
+    },
+    "/api/admin/booking-settings": {
+      "get": {
+        "operationId": "BookingAdminController_getBookingSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Consulte le réglage d'approbation (ADMIN)",
+        "tags": [
+          "admin"
+        ]
+      },
+      "put": {
+        "operationId": "BookingAdminController_updateBookingSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Modifie le réglage d'approbation (ADMIN)",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/admin/members/{id}/active": {
+      "patch": {
+        "operationId": "BookingAdminController_setMemberActive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Active ou désactive un membre (ADMIN)",
+        "tags": [
+          "admin"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Doz Manager API",
+    "description": "API REST de Doz Manager",
+    "version": "0.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "clerk-session": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CurrentMemberResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "ADMIN"
+            ]
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "isActive",
+          "displayName"
+        ]
+      },
+      "ReservationCreatorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "displayName"
+        ]
+      },
+      "ReservationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2026-10-28",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2026-10-30",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator": {
+            "$ref": "#/components/schemas/ReservationCreatorDto"
+          },
+          "approvals": {
+            "type": "number",
+            "minimum": 0
+          },
+          "rejections": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalEligibleVoters": {
+            "type": "number",
+            "minimum": 0
+          },
+          "currentMemberVote": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "startDate",
+          "endDate",
+          "status",
+          "createdAt",
+          "creator",
+          "approvals",
+          "rejections",
+          "totalEligibleVoters",
+          "currentMemberVote"
+        ]
+      },
+      "ReservationDatesDto": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "startDate",
+          "endDate"
+        ]
+      },
+      "ReservationVoteDto": {
+        "type": "object",
+        "properties": {
+          "choice": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          }
+        },
+        "required": [
+          "choice"
+        ]
+      }
+    }
+  }
+}

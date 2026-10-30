@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "vite build && tsc --noEmit",
+    "generate:api-types": "openapi-typescript ../api/openapi.json -o src/generated/api-schema.ts",
     "test": "tsx --test src/lib/*.test.ts src/stores/*.test.ts"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.2",
+    "openapi-typescript": "^7.13.0",
     "tailwindcss": "^4.3.3",
     "tsx": "4.23.15",
     "typescript": "5.9.3",

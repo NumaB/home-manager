@@ -14,7 +14,9 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@features/*": ["src/features/*"],
-      "@stores/*": ["src/stores/*"]
+      "@stores/*": ["src/stores/*"],
+      "@lib/*": ["src/lib/*"],
+      "@generated/*": ["src/generated/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"]

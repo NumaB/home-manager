@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "tsx watch --tsconfig tsconfig.build.json src/main.ts",
-    "build": "pnpm db:generate && tsc -p tsconfig.build.json",
+    "build": "pnpm db:generate && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "start:prod": "node dist/main.js",
     "typecheck": "pnpm db:generate && tsc --noEmit -p tsconfig.build.json",
-    "test": "tsx --tsconfig tsconfig.build.json --test src/health/health.controller.spec.ts src/auth/clerk-auth.guard.spec.ts src/auth/roles.guard.spec.ts",
+    "test": "tsx --tsconfig tsconfig.build.json --test src/health/health.controller.spec.ts src/auth/clerk-auth.guard.spec.ts src/auth/roles.guard.spec.ts src/reservations/reservation-rules.spec.ts src/reservations/reservations.controller.spec.ts",
     "db:generate": "prisma generate",
+    "generate:openapi": "tsx --tsconfig tsconfig.build.json src/scripts/generate-openapi.ts",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "bootstrap:admin": "tsx --tsconfig tsconfig.build.json src/scripts/bootstrap-admin.ts"
@@ -30,6 +31,7 @@
     "@types/node": "24.10.1",
     "@types/pg": "8.23.1",
     "prisma": "7.10.1",
+    "tsc-alias": "^1.9.9",
     "tsx": "4.23.15",
     "typescript": "5.9.3"
   }
