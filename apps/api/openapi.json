@@ -23,9 +23,7 @@
           }
         ],
         "summary": "Retourne le membre applicatif connecté",
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/api/health": {
@@ -47,9 +45,7 @@
           }
         },
         "summary": "Vérifie que l’API est démarrée",
-        "tags": [
-          "health"
-        ]
+        "tags": ["health"]
       }
     },
     "/api/reservations": {
@@ -77,9 +73,7 @@
           }
         ],
         "summary": "Liste les réservations qui chevauchent un mois",
-        "tags": [
-          "reservations"
-        ]
+        "tags": ["reservations"]
       },
       "post": {
         "operationId": "ReservationsController_create",
@@ -112,9 +106,7 @@
           }
         ],
         "summary": "Crée une réservation pour le membre connecté",
-        "tags": [
-          "reservations"
-        ]
+        "tags": ["reservations"]
       }
     },
     "/api/reservations/overlaps": {
@@ -142,9 +134,7 @@
           }
         ],
         "summary": "Recherche les réservations chevauchant une période",
-        "tags": [
-          "reservations"
-        ]
+        "tags": ["reservations"]
       }
     },
     "/api/reservations/{id}": {
@@ -179,9 +169,7 @@
           }
         ],
         "summary": "Modifie les dates d'une réservation du membre",
-        "tags": [
-          "reservations"
-        ]
+        "tags": ["reservations"]
       },
       "delete": {
         "operationId": "ReservationsController_cancel",
@@ -197,9 +185,7 @@
           }
         ],
         "summary": "Annule une réservation du membre connecté",
-        "tags": [
-          "reservations"
-        ]
+        "tags": ["reservations"]
       }
     },
     "/api/reservations/{id}/vote": {
@@ -234,9 +220,7 @@
           }
         ],
         "summary": "Vote ou modifie le vote d'une demande en attente",
-        "tags": [
-          "reservations"
-        ]
+        "tags": ["reservations"]
       }
     },
     "/api/admin/booking-settings": {
@@ -254,9 +238,7 @@
           }
         ],
         "summary": "Consulte le réglage d'approbation (ADMIN)",
-        "tags": [
-          "admin"
-        ]
+        "tags": ["admin"]
       },
       "put": {
         "operationId": "BookingAdminController_updateBookingSettings",
@@ -272,9 +254,7 @@
           }
         ],
         "summary": "Modifie le réglage d'approbation (ADMIN)",
-        "tags": [
-          "admin"
-        ]
+        "tags": ["admin"]
       }
     },
     "/api/admin/members/{id}/active": {
@@ -292,9 +272,7 @@
           }
         ],
         "summary": "Active ou désactive un membre (ADMIN)",
-        "tags": [
-          "admin"
-        ]
+        "tags": ["admin"]
       }
     }
   },
@@ -323,10 +301,7 @@
           },
           "role": {
             "type": "string",
-            "enum": [
-              "USER",
-              "ADMIN"
-            ]
+            "enum": ["USER", "ADMIN"]
           },
           "isActive": {
             "type": "boolean"
@@ -335,12 +310,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "role",
-          "isActive",
-          "displayName"
-        ]
+        "required": ["id", "role", "isActive", "displayName"]
       },
       "ReservationCreatorDto": {
         "type": "object",
@@ -352,10 +322,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "displayName"
-        ]
+        "required": ["id", "displayName"]
       },
       "ReservationResponseDto": {
         "type": "object",
@@ -375,10 +342,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "PENDING",
-              "APPROVED"
-            ]
+            "enum": ["PENDING", "APPROVED"]
           },
           "createdAt": {
             "type": "string",
@@ -401,10 +365,7 @@
           },
           "currentMemberVote": {
             "type": "string",
-            "enum": [
-              "APPROVE",
-              "REJECT"
-            ],
+            "enum": ["APPROVE", "REJECT"],
             "nullable": true
           }
         },
@@ -435,25 +396,17 @@
             "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
-        "required": [
-          "startDate",
-          "endDate"
-        ]
+        "required": ["startDate", "endDate"]
       },
       "ReservationVoteDto": {
         "type": "object",
         "properties": {
           "choice": {
             "type": "string",
-            "enum": [
-              "APPROVE",
-              "REJECT"
-            ]
+            "enum": ["APPROVE", "REJECT"]
           }
         },
-        "required": [
-          "choice"
-        ]
+        "required": ["choice"]
       }
     }
   }
