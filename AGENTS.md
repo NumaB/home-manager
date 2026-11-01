@@ -6,6 +6,10 @@ Pour tout nouvel import entre fichiers de dossiers différents, utilise les alia
 
 Si l'alias nécessaire n'existe pas encore, configure-le dans TypeScript et dans les outils d'exécution/build concernés avant de l'utiliser. Pour l'API, les alias `@/…` doivent être réécrits en chemins relatifs dans les fichiers compilés afin de fonctionner sous Node en production.
 
+## Gestion des couleurs
+
+Évite d'ajouter des couleurs en dur dans le code (par exemple dans les classes Tailwind arbitraires). Ajoute-les plutôt dans `apps/web/src/utils/colors.js`, en leur donnant un nom fonctionnel lié à leur usage plutôt qu'un nom descriptif de la couleur, puis expose ce token dans la configuration Tailwind si nécessaire.
+
 ## Contrats API et types du front
 
 Quand tu ajoutes ou modifies une fonctionnalité côté API (route, DTO, enum, requête ou réponse) susceptible d'être consommée par le front :

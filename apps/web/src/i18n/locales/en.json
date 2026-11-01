@@ -16,13 +16,14 @@
     "inventory": "Inventory",
     "stocks": "Stock",
     "gallery": "Gallery",
+    "accountSettings": "Account settings",
+    "accountSettingsLabel": "Account settings",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "menuLabel": "Navigation menu",
     "allPages": "All pages",
     "section": "Navigation",
-    "menuTitle": "Menu",
-    "moreSections": "More sections may be added here."
+    "menuTitle": "Menu"
   },
   "pages": {
     "title": "{{title}} page",
@@ -33,6 +34,16 @@
     "stocks": "stock",
     "gallery": "gallery",
     "calendarDescription": "House booking calendar."
+  },
+  "settings": {
+    "title": "Account settings",
+    "adminTitle": "Application settings",
+    "approvalTitle": "Reservation approval votes",
+    "approvalDescription": "When enabled, new reservations must be approved by eligible members.",
+    "approvalChangeHint": "Changing this setting automatically approves reservations that are still pending.",
+    "approvalDisabledHint": "New reservations are approved automatically.",
+    "loadError": "Settings could not be loaded. Please try again.",
+    "saveError": "The setting could not be saved. Please try again."
   },
   "calendar": {
     "previousMonth": "Previous month",

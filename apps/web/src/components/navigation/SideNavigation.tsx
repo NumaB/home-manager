@@ -34,7 +34,7 @@ export function SideNavigation() {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex min-h-12 items-center gap-3 rounded-xl px-3 font-semibold no-underline transition-colors hover:bg-focused-background focus-visible:bg-focused-background focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-2 ${active ? "bg-focused-background text-primary" : "text-secondary"}`}
+              className={`flex min-h-12 items-center gap-3 rounded-xl px-3 font-semibold no-underline transition-colors hover:bg-focused-background focus-visible:bg-focused-background focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-2 ${active ? "bg-focused-background text-primary" : "text-secondary"}`}
               aria-current={active ? "page" : undefined}
             >
               <Icons name={item.icon} width={22} className="shrink-0" />
@@ -43,7 +43,17 @@ export function SideNavigation() {
           );
         })}
       </nav>
-      <AuthControls className="mt-auto border-t border-burgundy/10 pt-4" />
+      <div className="mt-auto">
+        <Link
+          to="/settings"
+          className={` flex min-h-12 items-center gap-3 rounded-xl border-t border-burgundy/10 p-3 font-semibold no-underline transition-colors hover:bg-focused-background focus-visible:bg-focused-background focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-2 ${pathname === "/settings" ? "bg-focused-background text-primary" : "text-secondary"}`}
+          aria-current={pathname === "/settings" ? "page" : undefined}
+        >
+          <Icons name="settings" width={22} className="shrink-0" />
+          <span>{t("navigation.accountSettings")}</span>
+        </Link>
+        <AuthControls showName className="pt-3" />
+      </div>
     </aside>
   );
 }

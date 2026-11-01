@@ -43,7 +43,7 @@ export function BottomNavigation({
         <Icons name="tools" width={30} />
       </BottomNavLink>
       <button
-        className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-focused-background focus-visible:bg-focused-background focus-visible:text-primary focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]${menuOpen ? " bg-focused-background text-primary" : " text-secondary"}`}
+        className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-focused-background focus-visible:bg-focused-background focus-visible:text-primary focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-[3px]${menuOpen ? " bg-focused-background text-primary" : " text-secondary"}`}
         type="button"
         aria-label={t("navigation.openMenu")}
         aria-expanded={menuOpen}
@@ -67,7 +67,7 @@ function BottomNavLink({ to, label, active, children }: BottomNavLinkProps) {
   return (
     <Link
       to={to}
-      className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer no-underline transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-focused-background focus-visible:bg-focused-background focus-visible:text-primary focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]${active ? " bg-focused-background text-primary" : " text-secondary"}`}
+      className={`grid min-w-0 min-h-[54px] place-items-center self-center rounded-[13px] cursor-pointer no-underline transition-[background-color,color,transform] duration-[140ms] hover:-translate-y-px hover:bg-focused-background focus-visible:bg-focused-background focus-visible:text-primary focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-[3px]${active ? " bg-focused-background text-primary" : " text-secondary"}`}
       aria-label={label}
       aria-current={active ? "page" : undefined}
     >

@@ -191,6 +191,12 @@ export interface components {
       /** @enum {string} */
       choice: "APPROVE" | "REJECT";
     };
+    BookingSettingsResponseDto: {
+      approvalEnabled: boolean;
+    };
+    UpdateBookingSettingsDto: {
+      approvalEnabled: boolean;
+    };
   };
   responses: never;
   parameters: never;
@@ -377,7 +383,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          "application/json": components["schemas"]["BookingSettingsResponseDto"];
+        };
       };
     };
   };
@@ -388,13 +396,19 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateBookingSettingsDto"];
+      };
+    };
     responses: {
       200: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          "application/json": components["schemas"]["BookingSettingsResponseDto"];
+        };
       };
     };
   };

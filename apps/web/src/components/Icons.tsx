@@ -10,6 +10,7 @@ const icons = {
   inventory: new URL("../icons/inventory.svg", import.meta.url),
   stocks: new URL("../icons/stocks.svg", import.meta.url),
   gallery: new URL("../icons/gallery.svg", import.meta.url),
+  settings: new URL("../icons/settings.svg", import.meta.url),
 };
 
 export type IconName = keyof typeof icons;

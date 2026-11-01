@@ -5,6 +5,7 @@ const colors = {
   primary: "#006849",
   lightPrimary: "#9BC472",
   secondary: "#493D33",
+  focusRing: "#bf7d00",
 
   // Calendrier
   calendarGrid: "#211b18",

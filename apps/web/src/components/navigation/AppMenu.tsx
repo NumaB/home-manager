@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Icons } from "../Icons";
 import { navigationItems } from "./navigationItems";
@@ -9,6 +9,9 @@ type AppMenuProps = {
 
 export function AppMenu({ onClose }: AppMenuProps) {
   const { t } = useTranslation();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
 
   return (
     <div
@@ -34,7 +37,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
             </h2>
           </div>
           <button
-            className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-light-background text-burgundy focus-visible:bg-focused-background focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
+            className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-light-background text-burgundy focus-visible:bg-focused-background focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-[3px]"
             type="button"
             aria-label={t("navigation.closeMenu")}
             onClick={onClose}
@@ -47,10 +50,10 @@ export function AppMenu({ onClose }: AppMenuProps) {
             <Link
               key={item.to}
               to={item.to}
-              className="flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-secondary no-underline focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]"
+              className="flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-secondary no-underline focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-[3px]"
               activeProps={{
                 className:
-                  "flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-primary no-underline focus-visible:outline-3 focus-visible:outline-[#bf7d00] focus-visible:outline-offset-[3px]",
+                  "flex min-h-12 items-center justify-between gap-3 border-b border-burgundy/10 font-semibold text-primary no-underline focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-[3px]",
               }}
               onClick={onClose}
             >
@@ -64,9 +67,20 @@ export function AppMenu({ onClose }: AppMenuProps) {
             </Link>
           ))}
         </nav>
-        <p className="mt-4 text-[13px] text-muted">
-          {t("navigation.moreSections")}
-        </p>
+        <nav
+          className="mt-4 border-t border-burgundy/10 pt-2"
+          aria-label={t("navigation.accountSettingsLabel")}
+        >
+          <Link
+            to="/settings"
+            className={`flex min-h-12 items-center gap-3 font-semibold no-underline focus-visible:outline-3 focus-visible:outline-focus-ring focus-visible:outline-offset-[3px] ${pathname === "/settings" ? "text-primary" : "text-secondary"}`}
+            aria-current={pathname === "/settings" ? "page" : undefined}
+            onClick={onClose}
+          >
+            <Icons name="settings" width={22} />
+            {t("navigation.accountSettings")}
+          </Link>
+        </nav>
       </aside>
     </div>
   );

@@ -24,9 +24,11 @@ import type { Member } from "@prisma/client";
 import { CurrentMember, RequireRoles } from "@/auth/auth.decorators";
 import { ReservationsService } from "./reservations.service";
 import {
+  BookingSettingsResponseDto,
   ReservationDatesDto,
   ReservationResponseDto,
   ReservationVoteDto,
+  UpdateBookingSettingsDto,
 } from "@/openapi/dtos/reservations.dto";
 
 @ApiTags("reservations")
@@ -127,6 +129,7 @@ export class BookingAdminController {
   @Get("booking-settings")
   @RequireRoles(MemberRole.ADMIN)
   @ApiOperation({ summary: "Consulte le réglage d'approbation (ADMIN)" })
+  @ApiOkResponse({ type: BookingSettingsResponseDto })
   getBookingSettings() {
     return this.reservations.getBookingSettings();
   }
@@ -134,7 +137,9 @@ export class BookingAdminController {
   @Put("booking-settings")
   @RequireRoles(MemberRole.ADMIN)
   @ApiOperation({ summary: "Modifie le réglage d'approbation (ADMIN)" })
-  updateBookingSettings(@Body() body: { approvalEnabled?: unknown }) {
+  @ApiBody({ type: UpdateBookingSettingsDto })
+  @ApiOkResponse({ type: BookingSettingsResponseDto })
+  updateBookingSettings(@Body() body: UpdateBookingSettingsDto) {
     return this.reservations.updateBookingSettings(body.approvalEnabled);
   }
 

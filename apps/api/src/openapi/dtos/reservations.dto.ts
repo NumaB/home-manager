@@ -64,3 +64,13 @@ export class ReservationVoteDto {
   @ApiProperty({ type: String, enum: ["APPROVE", "REJECT"] })
   choice!: "APPROVE" | "REJECT";
 }
+
+export class BookingSettingsResponseDto {
+  @ApiProperty({ type: Boolean })
+  approvalEnabled!: boolean;
+}
+
+export class UpdateBookingSettingsDto {
+  @ApiProperty({ type: Boolean })
+  approvalEnabled!: boolean;
+}

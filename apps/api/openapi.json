@@ -229,7 +229,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingSettingsResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -243,9 +250,26 @@
       "put": {
         "operationId": "BookingAdminController_updateBookingSettings",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBookingSettingsDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingSettingsResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -407,6 +431,24 @@
           }
         },
         "required": ["choice"]
+      },
+      "BookingSettingsResponseDto": {
+        "type": "object",
+        "properties": {
+          "approvalEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": ["approvalEnabled"]
+      },
+      "UpdateBookingSettingsDto": {
+        "type": "object",
+        "properties": {
+          "approvalEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": ["approvalEnabled"]
       }
     }
   }

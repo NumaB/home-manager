@@ -11,6 +11,7 @@ export default {
         primary: colors.primary,
         "light-primary": colors.lightPrimary,
         secondary: colors.secondary,
+        "focus-ring": colors.focusRing,
         "calendar-grid": colors.calendarGrid,
         "calendar-current-day": colors.calendarCurrentDay,
         "calendar-outside-day": colors.calendarOutsideDay,
