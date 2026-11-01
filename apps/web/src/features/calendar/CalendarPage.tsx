@@ -21,6 +21,9 @@ export function CalendarPage() {
   const [error, setError] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [modal, setModal] = useState<ModalState | null>(null);
+  const [hoveredReservationId, setHoveredReservationId] = useState<
+    string | null
+  >(null);
 
   const weeks = useMemo(() => {
     const [year, monthNumber] = month.split("-").map(Number);
@@ -146,7 +149,7 @@ export function CalendarPage() {
       </div>
 
       <div
-        className={`overflow-hidden border-l border-t border-[#211b18]${loading ? " opacity-60" : ""}`}
+        className={`overflow-hidden border-l border-t border-calendar-grid${loading ? " opacity-60" : ""}`}
         aria-busy={loading}
         aria-label={t("calendar.monthView", { month: monthLabel })}
       >
@@ -155,6 +158,8 @@ export function CalendarPage() {
             key={days[0].dateKey}
             days={days}
             reservations={reservations}
+            hoveredReservationId={hoveredReservationId}
+            onReservationHover={setHoveredReservationId}
             locale={i18n.language}
             onSelect={(reservation) =>
               setModal({ type: "details", reservation })

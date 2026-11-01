@@ -5,6 +5,8 @@ import type { Reservation, Translate } from "./calendar-types";
 type CalendarWeekProps = {
   days: CalendarDay[];
   reservations: Reservation[];
+  hoveredReservationId: string | null;
+  onReservationHover: (reservationId: string | null) => void;
   locale: string;
   onSelect: (reservation: Reservation) => void;
   t: Translate;
@@ -13,6 +15,8 @@ type CalendarWeekProps = {
 export function CalendarWeek({
   days,
   reservations,
+  hoveredReservationId,
+  onReservationHover,
   locale,
   onSelect,
   t,
@@ -29,7 +33,7 @@ export function CalendarWeek({
       {days.map((day) => (
         <div
           key={day.dateKey}
-          className={`min-w-0 border-r border-b border-[#211b18] px-[4px] pt-[7px] text-[14px] leading-none${day.inMonth ? " text-[#211b18]" : " text-[#aaa397]"}`}
+          className={`min-w-0 border-r border-b border-calendar-grid px-[4px] pt-[7px] text-[14px] leading-none${day.inMonth ? " text-calendar-current-day" : " text-calendar-outside-day"}`}
           style={{ minHeight: rowHeight }}
           aria-label={formatDate(day.dateKey, locale)}
         >
@@ -38,13 +42,14 @@ export function CalendarWeek({
       ))}
       {segments.map(({ reservation, startColumn, endColumn, lane }) => {
         const isPending = reservation.status === "PENDING";
+        const isHighlighted = hoveredReservationId === reservation.id;
         const label = isPending
           ? `${reservation.creator.displayName} ${reservation.approvals}/${reservation.totalEligibleVoters}`
           : reservation.creator.displayName;
         return (
           <button
             key={`${reservation.id}-${days[0].dateKey}`}
-            className={`absolute z-10 flex h-[19px] min-w-0 items-center overflow-hidden rounded-[6px] px-2 text-left text-[11px] font-semibold leading-none shadow-sm focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-burgundy ${isPending ? "bg-[#98c774] text-[#173b2d]" : "bg-teal text-white"}`}
+            className={`absolute z-10 flex h-[19px] min-w-0 cursor-pointer items-center overflow-hidden rounded-[6px] px-2 text-left text-[11px] font-semibold leading-none shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-burgundy ${isPending ? "bg-pending-reservation text-pending-reservation-text" : "bg-teal text-white"}${isHighlighted ? " z-20 brightness-145 shadow-lg ring-2 ring-reservation-hover-outline" : ""}`}
             style={{
               left: `calc(${(startColumn / 7) * 100}% + 3px)`,
               width: `calc(${((endColumn - startColumn + 1) / 7) * 100}% - 6px)`,
@@ -60,6 +65,8 @@ export function CalendarWeek({
               total: reservation.totalEligibleVoters,
             })}
             onClick={() => onSelect(reservation)}
+            onMouseEnter={() => onReservationHover(reservation.id)}
+            onMouseLeave={() => onReservationHover(null)}
           >
             <span className="truncate">{label}</span>
           </button>

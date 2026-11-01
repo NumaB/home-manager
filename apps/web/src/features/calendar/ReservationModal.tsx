@@ -42,7 +42,6 @@ type ReservationDetailsProps = {
   onVote: (choice: VoteChoice) => void;
   onCancel: () => void;
   onEdit: () => void;
-  onClose: () => void;
   t: Translate;
 };
 
@@ -236,7 +235,6 @@ export function ReservationModal({
             onVote={(choice) => void submitVote(choice)}
             onCancel={() => void cancelReservation()}
             onEdit={() => setView("form")}
-            onClose={onClose}
             t={t}
           />
         ) : null}
@@ -341,7 +339,6 @@ function ReservationDetails({
   onVote,
   onCancel,
   onEdit,
-  onClose,
   t,
 }: ReservationDetailsProps) {
   return (
@@ -388,37 +385,26 @@ function ReservationDetails({
           </button>
         </div>
       )}
-      <div className="flex flex-wrap justify-between gap-2 border-t border-burgundy/10 pt-4">
-        {ownsReservation ? (
-          <>
-            <button
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-burgundy hover:bg-burgundy/10"
-              type="button"
-              disabled={saving}
-              onClick={onCancel}
-            >
-              {t("calendar.cancelReservation")}
-            </button>
-            <button
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background"
-              type="button"
-              disabled={saving}
-              onClick={onEdit}
-            >
-              {t("calendar.edit")}
-            </button>
-          </>
-        ) : (
-          <span />
-        )}
-        <button
-          className="rounded-lg px-3 py-2 text-sm font-semibold text-secondary hover:bg-focused-background"
-          type="button"
-          onClick={onClose}
-        >
-          {t("calendar.close")}
-        </button>
-      </div>
+      {ownsReservation && (
+        <div className="flex flex-wrap justify-end gap-2 border-t border-burgundy/10 pt-4">
+          <button
+            className="rounded-lg px-3 py-2 text-sm font-semibold text-burgundy hover:bg-burgundy/10"
+            type="button"
+            disabled={saving}
+            onClick={onCancel}
+          >
+            {t("calendar.cancelReservation")}
+          </button>
+          <button
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background"
+            type="button"
+            disabled={saving}
+            onClick={onEdit}
+          >
+            {t("calendar.edit")}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
