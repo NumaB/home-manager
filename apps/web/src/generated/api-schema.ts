@@ -21,6 +21,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/auth/me/reservation-color": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Modifie la couleur des réservations du membre */
+    put: operations["AuthController_updateReservationColor"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/health": {
     parameters: {
       query?: never;
@@ -153,10 +170,18 @@ export interface components {
       role: "USER" | "ADMIN";
       isActive: boolean;
       displayName: string;
+      /** @example #C72424 */
+      reservationColor: string;
+    };
+    UpdateReservationColorDto: {
+      /** @example #C72424 */
+      reservationColor: string;
     };
     ReservationCreatorDto: {
       id: string;
       displayName: string;
+      /** @example #C72424 */
+      reservationColor: string;
     };
     ReservationResponseDto: {
       id: string;
@@ -214,6 +239,29 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CurrentMemberResponseDto"];
+        };
+      };
+    };
+  };
+  AuthController_updateReservationColor: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateReservationColorDto"];
+      };
+    };
     responses: {
       200: {
         headers: {

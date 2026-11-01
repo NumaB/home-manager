@@ -1,3 +1,4 @@
+import { getReservationTextColor } from "@utils/colors";
 import { layoutWeekSegments, type CalendarDay } from "./calendar-date-utils";
 import { formatDate } from "./calendar-formatters";
 import type { Reservation, Translate } from "./calendar-types";
@@ -49,11 +50,15 @@ export function CalendarWeek({
         return (
           <button
             key={`${reservation.id}-${days[0].dateKey}`}
-            className={`absolute z-10 flex h-[19px] min-w-0 cursor-pointer items-center overflow-hidden rounded-[6px] px-2 text-left text-[11px] font-semibold leading-none shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-burgundy ${isPending ? "bg-pending-reservation text-pending-reservation-text" : "bg-teal text-white"}${isHighlighted ? " z-20 brightness-145 shadow-lg ring-2 ring-reservation-hover-outline" : ""}`}
+            className={`absolute z-10 flex h-[19px] min-w-0 cursor-pointer items-center overflow-hidden rounded-[6px] border-0 px-2 text-left text-[11px] font-semibold leading-none shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-burgundy${isHighlighted ? " z-20 brightness-145 shadow-lg ring-2 ring-reservation-hover-outline" : ""}`}
             style={{
               left: `calc(${(startColumn / 7) * 100}% + 3px)`,
               width: `calc(${((endColumn - startColumn + 1) / 7) * 100}% - 6px)`,
               top: 30 + lane * 23,
+              backgroundColor: reservation.creator.reservationColor,
+              color: getReservationTextColor(
+                reservation.creator.reservationColor,
+              ),
             }}
             type="button"
             aria-label={t("calendar.reservationLabel", {

@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
         "@generated": fileURLToPath(
           new URL("./src/generated", import.meta.url),
         ),
+        "@utils": fileURLToPath(new URL("./src/utils", import.meta.url)),
       },
     },
     server: { host: "0.0.0.0", port },

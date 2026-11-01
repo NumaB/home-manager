@@ -7,7 +7,7 @@
     "build": "pnpm db:generate && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "start:prod": "node dist/main.js",
     "typecheck": "pnpm db:generate && tsc --noEmit -p tsconfig.build.json",
-    "test": "tsx --tsconfig tsconfig.build.json --test src/health/health.controller.spec.ts src/auth/clerk-auth.guard.spec.ts src/auth/roles.guard.spec.ts src/reservations/reservation-rules.spec.ts src/reservations/reservations.controller.spec.ts",
+    "test": "tsx --tsconfig tsconfig.build.json --test src/health/health.controller.spec.ts src/auth/clerk-auth.guard.spec.ts src/auth/member.service.spec.ts src/auth/roles.guard.spec.ts src/reservations/reservation-rules.spec.ts src/reservations/reservations.controller.spec.ts",
     "db:generate": "prisma generate",
     "generate:openapi": "tsx --tsconfig tsconfig.build.json src/scripts/generate-openapi.ts",
     "db:migrate:dev": "prisma migrate dev",

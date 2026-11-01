@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { components } from "@generated/api-schema";
 import { useApiClient } from "@lib/api-client";
+import { reservationPalette } from "@utils/colors";
 
 type CurrentMember = components["schemas"]["CurrentMemberResponseDto"];
 type BookingSettings = components["schemas"]["BookingSettingsResponseDto"];
@@ -15,6 +16,12 @@ export function SettingsPage() {
   const [loadError, setLoadError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
+  const [colorDialogOpen, setColorDialogOpen] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  const [customColor, setCustomColor] = useState("");
+  const [customSelected, setCustomSelected] = useState(false);
+  const [savingColor, setSavingColor] = useState(false);
+  const [colorSaveError, setColorSaveError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -45,6 +52,15 @@ export function SettingsPage() {
     };
   }, [api]);
 
+  useEffect(() => {
+    if (!colorDialogOpen) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setColorDialogOpen(false);
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [colorDialogOpen]);
+
   async function toggleApproval() {
     if (approvalEnabled === null || saving) return;
 
@@ -61,6 +77,42 @@ export function SettingsPage() {
       setSaveError(true);
     } finally {
       setSaving(false);
+    }
+  }
+
+  function openColorDialog() {
+    if (!member) return;
+    const matchingPreset = reservationPalette.find(
+      ({ hex }) => hex.toUpperCase() === member.reservationColor.toUpperCase(),
+    );
+    setSelectedPreset(matchingPreset?.hex ?? null);
+    setCustomColor(matchingPreset ? "" : member.reservationColor);
+    setCustomSelected(!matchingPreset);
+    setColorSaveError(false);
+    setColorDialogOpen(true);
+  }
+
+  async function saveReservationColor() {
+    const reservationColor = customSelected ? customColor : selectedPreset;
+    if (!reservationColor || savingColor || !member) return;
+
+    setSavingColor(true);
+    setColorSaveError(false);
+    try {
+      const updatedMember = await api<CurrentMember>(
+        "auth/me/reservation-color",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservationColor }),
+        },
+      );
+      setMember(updatedMember);
+      setColorDialogOpen(false);
+    } catch {
+      setColorSaveError(true);
+    } finally {
+      setSavingColor(false);
     }
   }
 
@@ -90,7 +142,25 @@ export function SettingsPage() {
             {t("settings.accountTitle")}
           </h2>
         </div>
+        {!loading && member && (
+          <button
+            className="flex w-full cursor-pointer items-center justify-between gap-4 border-t border-burgundy/10 py-4 text-left transition hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-focus-ring"
+            type="button"
+            onClick={openColorDialog}
+            aria-haspopup="dialog"
+          >
+            <span className="text-base font-bold text-primary">
+              {t("settings.reservationColor")}
+            </span>
+            <span
+              className="size-12 shrink-0 rounded-full border border-secondary/20"
+              style={{ backgroundColor: member.reservationColor }}
+              aria-label={member.reservationColor}
+            />
+          </button>
+        )}
       </section>
+
       {!loading && member?.role === "ADMIN" && (
         <section aria-labelledby="admin-settings-title">
           <div className="mb-4">
@@ -144,6 +214,125 @@ export function SettingsPage() {
             </p>
           )}
         </section>
+      )}
+
+      {colorDialogOpen && member && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-secondary/50 p-2 md:p-5"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setColorDialogOpen(false);
+          }}
+        >
+          <section
+            className="h-auto max-h-[min(90vh,760px)] w-full max-w-[800px] overflow-y-auto rounded-2xl bg-background p-2 shadow-2xl md:h-[min(90vh,840px)] md:max-h-[min(90vh,840px)] md:p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reservation-color-title"
+          >
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <h2
+                id="reservation-color-title"
+                className="m-0 font-heading text-xl font-bold text-primary"
+              >
+                {t("settings.reservationColor")}
+              </h2>
+              <button
+                className="shrink-0 rounded-lg px-2 py-1 text-2xl leading-none text-secondary hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-focus-ring"
+                type="button"
+                aria-label={t("settings.close")}
+                onClick={() => setColorDialogOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="grid grid-cols-4 justify-items-center gap-x-0 gap-y-3 md:grid-cols-6 md:gap-x-2 md:gap-y-4">
+              {reservationPalette.map(({ nameKey, hex }) => {
+                const selected = selectedPreset === hex;
+                return (
+                  <button
+                    key={hex}
+                    className="flex cursor-pointer flex-col items-center gap-2 rounded-xl p-0 focus-visible:outline-2 focus-visible:outline-focus-ring"
+                    type="button"
+                    aria-label={t(`settings.colors.${nameKey}`)}
+                    aria-pressed={selected}
+                    onClick={() => {
+                      setSelectedPreset(hex);
+                      setCustomColor("");
+                      setCustomSelected(false);
+                    }}
+                  >
+                    <span
+                      className={`size-[72px] rounded-full transition md:size-24 hover:scale-105 hover:ring-4 hover:ring-light-primary hover:ring-offset-2 hover:ring-offset-background ${selected ? "ring-4 ring-primary ring-offset-2 ring-offset-background" : ""}`}
+                      style={{ backgroundColor: hex }}
+                      aria-hidden="true"
+                    />
+                    <span className="hidden text-center text-sm text-secondary md:block">
+                      {t(`settings.colors.${nameKey}`)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-5 flex items-center gap-4 border-t border-burgundy/10 pt-4">
+              <label
+                className={`relative grid size-[72px] shrink-0 cursor-pointer place-items-center rounded-full border-2 border-dashed border-secondary/50 focus-within:outline-2 focus-within:outline-focus-ring focus-within:outline-offset-4 md:size-24 ${customSelected ? "ring-4 ring-primary ring-offset-2 ring-offset-background" : ""}`}
+                style={
+                  customColor ? { backgroundColor: customColor } : undefined
+                }
+              >
+                {!customColor && (
+                  <span
+                    className="text-3xl leading-none text-secondary"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                )}
+                <input
+                  className="absolute inset-0 size-full cursor-pointer opacity-0"
+                  type="color"
+                  aria-label={t("settings.customColor")}
+                  value={customColor || "#FFFFFF"}
+                  onClick={() => {
+                    setSelectedPreset(null);
+                    setCustomSelected(true);
+                  }}
+                  onChange={(event) => {
+                    setSelectedPreset(null);
+                    setCustomColor(event.currentTarget.value.toUpperCase());
+                    setCustomSelected(true);
+                  }}
+                />
+              </label>
+              <span className="text-sm text-secondary">
+                {t("settings.customColor")}
+              </span>
+            </div>
+
+            {colorSaveError && (
+              <p
+                className="mt-4 rounded-xl border border-burgundy/20 bg-background p-3 text-sm text-secondary"
+                role="alert"
+              >
+                {t("settings.colorSaveError")}
+              </p>
+            )}
+
+            <div className="mt-5 flex justify-end">
+              <button
+                className="rounded-full bg-primary px-6 py-3 font-semibold text-white transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-focus-ring disabled:cursor-wait disabled:opacity-60"
+                type="button"
+                disabled={savingColor || (!selectedPreset && !customColor)}
+                onClick={() => void saveReservationColor()}
+              >
+                {savingColor ? t("settings.saving") : t("settings.save")}
+              </button>
+            </div>
+          </section>
+        </div>
       )}
     </div>
   );

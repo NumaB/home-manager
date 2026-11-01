@@ -15,7 +15,7 @@ import { PrismaService } from "@/prisma/prisma.service";
 import { countVotes, resolveVoteOutcome } from "./reservation-rules";
 
 const reservationInclude = {
-  creator: { select: { id: true, displayName: true } },
+  creator: { select: { id: true, displayName: true, reservationColor: true } },
   voters: { select: { memberId: true, choice: true } },
 } satisfies Prisma.ReservationInclude;
 
@@ -31,7 +31,7 @@ export type ReservationView = {
   endDate: string;
   status: ReservationStatus;
   createdAt: string;
-  creator: { id: string; displayName: string };
+  creator: { id: string; displayName: string; reservationColor: string };
   approvals: number;
   rejections: number;
   totalEligibleVoters: number;

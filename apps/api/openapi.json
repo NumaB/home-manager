@@ -26,6 +26,41 @@
         "tags": ["auth"]
       }
     },
+    "/api/auth/me/reservation-color": {
+      "put": {
+        "operationId": "AuthController_updateReservationColor",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReservationColorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Modifie la couleur des réservations du membre",
+        "tags": ["auth"]
+      }
+    },
     "/api/health": {
       "get": {
         "operationId": "HealthController_getHealth",
@@ -332,9 +367,31 @@
           },
           "displayName": {
             "type": "string"
+          },
+          "reservationColor": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "example": "#C72424"
           }
         },
-        "required": ["id", "role", "isActive", "displayName"]
+        "required": [
+          "id",
+          "role",
+          "isActive",
+          "displayName",
+          "reservationColor"
+        ]
+      },
+      "UpdateReservationColorDto": {
+        "type": "object",
+        "properties": {
+          "reservationColor": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "example": "#C72424"
+          }
+        },
+        "required": ["reservationColor"]
       },
       "ReservationCreatorDto": {
         "type": "object",
@@ -344,9 +401,14 @@
           },
           "displayName": {
             "type": "string"
+          },
+          "reservationColor": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "example": "#C72424"
           }
         },
-        "required": ["id", "displayName"]
+        "required": ["id", "displayName", "reservationColor"]
       },
       "ReservationResponseDto": {
         "type": "object",

@@ -1,7 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { createClerkClient } from "@clerk/backend";
 import type { Member } from "@prisma/client";
 import { PrismaService } from "@/prisma/prisma.service";
+import { randomReservationColor } from "./reservation-colors";
 
 @Injectable()
 export class MemberService {
@@ -16,7 +17,26 @@ export class MemberService {
     return this.prisma.member.upsert({
       where: { clerkUserId },
       update: {},
-      create: { clerkUserId },
+      create: {
+        clerkUserId,
+        reservationColor: randomReservationColor(),
+      },
+    });
+  }
+
+  async updateReservationColor(
+    memberId: string,
+    colorInput: unknown,
+  ): Promise<Member> {
+    if (
+      typeof colorInput !== "string" ||
+      !/^#[0-9A-Fa-f]{6}$/.test(colorInput)
+    ) {
+      throw new BadRequestException("reservationColor must be a hex color");
+    }
+    return this.prisma.member.update({
+      where: { id: memberId },
+      data: { reservationColor: colorInput.toUpperCase() },
     });
   }
 

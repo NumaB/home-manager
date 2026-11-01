@@ -6,6 +6,13 @@ export class ReservationCreatorDto {
 
   @ApiProperty({ type: String })
   displayName!: string;
+
+  @ApiProperty({
+    type: String,
+    pattern: "^#[0-9A-Fa-f]{6}$",
+    example: "#C72424",
+  })
+  reservationColor!: string;
 }
 
 export class ReservationResponseDto {
