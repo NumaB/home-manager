@@ -26,6 +26,7 @@ model Member {
   id                   String             @id @default(cuid())
   clerkUserId          String             @unique
   displayName          String             @default("Membre")
+  displayNameInitialized Boolean           @default(false)
   reservationColor     String             @default("#C72424")
   role                 MemberRole         @default(USER)
   isActive             Boolean            @default(true)

@@ -38,6 +38,10 @@
   "settings": {
     "title": "Account settings",
     "accountTitle": "General settings",
+    "displayName": "Display name",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "displayNameSaveError": "The display name could not be saved. Please try again.",
     "reservationColor": "Reservation color",
     "customColor": "Custom color",
     "close": "Close",

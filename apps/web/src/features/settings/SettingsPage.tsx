@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { components } from "@generated/api-schema";
+import { Icons } from "@components/Icons";
 import { useApiClient } from "@lib/api-client";
+import { useAppStore } from "@stores/app-store-provider";
 import { reservationPalette } from "@utils/colors";
 
 type CurrentMember = components["schemas"]["CurrentMemberResponseDto"];
@@ -10,7 +12,14 @@ type BookingSettings = components["schemas"]["BookingSettingsResponseDto"];
 export function SettingsPage() {
   const { t } = useTranslation();
   const api = useApiClient();
+  const setMemberDisplayName = useAppStore(
+    (state) => state.setMemberDisplayName,
+  );
   const [member, setMember] = useState<CurrentMember | null>(null);
+  const [displayName, setDisplayName] = useState("");
+  const [editingDisplayName, setEditingDisplayName] = useState(false);
+  const [savingDisplayName, setSavingDisplayName] = useState(false);
+  const [displayNameSaveError, setDisplayNameSaveError] = useState(false);
   const [approvalEnabled, setApprovalEnabled] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -33,6 +42,8 @@ export function SettingsPage() {
         const currentMember = await api<CurrentMember>("auth/me");
         if (cancelled) return;
         setMember(currentMember);
+        setDisplayName(currentMember.displayName);
+        setMemberDisplayName(currentMember.displayName);
 
         if (currentMember.role === "ADMIN") {
           const settings = await api<BookingSettings>("admin/booking-settings");
@@ -50,7 +61,7 @@ export function SettingsPage() {
     return () => {
       cancelled = true;
     };
-  }, [api]);
+  }, [api, setMemberDisplayName]);
 
   useEffect(() => {
     if (!colorDialogOpen) return;
@@ -77,6 +88,34 @@ export function SettingsPage() {
       setSaveError(true);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function saveDisplayName() {
+    const normalizedDisplayName = displayName.trim();
+    if (
+      !normalizedDisplayName ||
+      normalizedDisplayName.length > 80 ||
+      savingDisplayName
+    )
+      return;
+
+    setSavingDisplayName(true);
+    setDisplayNameSaveError(false);
+    try {
+      const updatedMember = await api<CurrentMember>("auth/me/display-name", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ displayName: normalizedDisplayName }),
+      });
+      setMember(updatedMember);
+      setDisplayName(updatedMember.displayName);
+      setMemberDisplayName(updatedMember.displayName);
+      setEditingDisplayName(false);
+    } catch {
+      setDisplayNameSaveError(true);
+    } finally {
+      setSavingDisplayName(false);
     }
   }
 
@@ -143,21 +182,118 @@ export function SettingsPage() {
           </h2>
         </div>
         {!loading && member && (
-          <button
-            className="flex w-full cursor-pointer items-center justify-between gap-4 border-t border-burgundy/10 py-4 text-left transition hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-focus-ring"
-            type="button"
-            onClick={openColorDialog}
-            aria-haspopup="dialog"
-          >
-            <span className="text-base font-bold text-primary">
-              {t("settings.reservationColor")}
-            </span>
-            <span
-              className="size-12 shrink-0 rounded-full border border-secondary/20"
-              style={{ backgroundColor: member.reservationColor }}
-              aria-label={member.reservationColor}
-            />
-          </button>
+          <>
+            <div className="border-t border-burgundy/10 py-4">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
+                {editingDisplayName ? (
+                  <label
+                    className="col-span-2 text-base font-bold leading-6 text-primary sm:col-span-1"
+                    htmlFor="display-name"
+                  >
+                    {t("settings.displayName")}
+                  </label>
+                ) : (
+                  <span className="col-span-2 text-base font-bold text-primary sm:col-span-1">
+                    {t("settings.displayName")}
+                  </span>
+                )}
+                {editingDisplayName ? (
+                  <input
+                    className="h-8 min-w-0 w-full rounded-md border border-burgundy/20 bg-display-name-input px-2 text-base leading-6 text-primary focus-visible:outline-2 focus-visible:outline-focus-ring"
+                    id="display-name"
+                    type="text"
+                    maxLength={80}
+                    value={displayName}
+                    onChange={(event) =>
+                      setDisplayName(event.currentTarget.value)
+                    }
+                  />
+                ) : (
+                  <span className="min-w-0 break-words text-base font-normal text-primary">
+                    {member.displayName}
+                  </span>
+                )}
+                {editingDisplayName ? (
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="h-8 shrink-0 cursor-pointer rounded-full border border-burgundy/20 px-3 font-semibold text-primary transition hover:-translate-y-px hover:border-primary hover:bg-focused-background hover:shadow-sm focus-visible:outline-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-60 sm:px-4"
+                      type="button"
+                      disabled={savingDisplayName}
+                      onClick={() => {
+                        setDisplayName(member.displayName);
+                        setDisplayNameSaveError(false);
+                        setEditingDisplayName(false);
+                      }}
+                      aria-label={t("settings.cancel")}
+                    >
+                      <span className="hidden sm:inline">
+                        {t("settings.cancel")}
+                      </span>
+                      <span className="sm:hidden" aria-hidden="true">
+                        <Icons name="close" width={16} />
+                      </span>
+                    </button>
+                    <button
+                      className="h-8 shrink-0 cursor-pointer rounded-full bg-primary px-3 font-semibold text-white transition hover:-translate-y-px hover:opacity-80 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-60 sm:px-5"
+                      type="button"
+                      disabled={
+                        savingDisplayName ||
+                        !displayName.trim() ||
+                        displayName.trim().length > 80
+                      }
+                      onClick={() => void saveDisplayName()}
+                      aria-label={
+                        savingDisplayName
+                          ? t("settings.saving")
+                          : t("settings.save")
+                      }
+                    >
+                      <span className="hidden sm:inline">
+                        {savingDisplayName
+                          ? t("settings.saving")
+                          : t("settings.save")}
+                      </span>
+                      <span className="sm:hidden" aria-hidden="true">
+                        <Icons name="save" width={16} />
+                      </span>
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="h-8 shrink-0 cursor-pointer rounded-full bg-primary px-6 font-semibold text-white transition hover:-translate-y-px hover:opacity-80 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-focus-ring"
+                    type="button"
+                    onClick={() => {
+                      setDisplayName(member.displayName);
+                      setDisplayNameSaveError(false);
+                      setEditingDisplayName(true);
+                    }}
+                  >
+                    {t("settings.edit")}
+                  </button>
+                )}
+              </div>
+              {displayNameSaveError && (
+                <p className="mt-3 text-sm text-secondary" role="alert">
+                  {t("settings.displayNameSaveError")}
+                </p>
+              )}
+            </div>
+            <button
+              className="flex w-full cursor-pointer items-center justify-between gap-4 py-4 text-left transition hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-focus-ring"
+              type="button"
+              onClick={openColorDialog}
+              aria-haspopup="dialog"
+            >
+              <span className="text-base font-bold text-primary">
+                {t("settings.reservationColor")}
+              </span>
+              <span
+                className="size-12 shrink-0 rounded-full border border-secondary/20"
+                style={{ backgroundColor: member.reservationColor }}
+                aria-label={member.reservationColor}
+              />
+            </button>
+          </>
         )}
       </section>
 

@@ -8,6 +8,7 @@ export default {
         background: colors.background,
         "light-background": colors.lightBackground,
         "focused-background": colors.focusedBackground,
+        "display-name-input": colors.displayNameInputBackground,
         primary: colors.primary,
         "light-primary": colors.lightPrimary,
         secondary: colors.secondary,

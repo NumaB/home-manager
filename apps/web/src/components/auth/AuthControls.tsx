@@ -1,5 +1,6 @@
-import { Show, useUser, UserButton } from "@clerk/tanstack-react-start";
+import { Show, UserButton } from "@clerk/tanstack-react-start";
 import { useTranslation } from "react-i18next";
+import { useAppStore } from "@stores/app-store-provider";
 
 type AuthControlsProps = {
   className?: string;
@@ -32,19 +33,15 @@ export function AuthControls({
 }
 
 function SignedInControls({ showName }: { showName: boolean }) {
-  const { isLoaded, user } = useUser();
-  const name =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-    user?.fullName ||
-    user?.primaryEmailAddress?.emailAddress;
+  const displayName = useAppStore((state) => state.memberDisplayName);
 
   return (
     <div
       className={`flex min-w-0 items-center gap-3 ${showName ? "w-full justify-between" : ""}`}
     >
-      {showName && isLoaded && name && (
+      {showName && displayName && (
         <span className="truncate text-sm font-semibold text-secondary">
-          {name}
+          {displayName}
         </span>
       )}
       <UserButton />

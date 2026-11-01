@@ -16,6 +16,9 @@ const colors = {
   reservationHoverOutline: "#000000",
   reservationTextDark: "#211B18",
   reservationTextLight: "#FFFFFF",
+
+  // Paramètres de compte
+  displayNameInputBackground: "#FFFFFF",
 };
 
 export const reservationPalette = [

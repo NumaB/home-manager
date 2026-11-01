@@ -38,6 +38,10 @@
   "settings": {
     "title": "Paramètres de compte",
     "accountTitle": "Paramètres généraux",
+    "displayName": "Nom d’affichage",
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "displayNameSaveError": "Le nom d’affichage n’a pas pu être enregistré. Réessayez.",
     "reservationColor": "Couleur de réservation",
     "customColor": "Couleur personnalisée",
     "close": "Fermer",

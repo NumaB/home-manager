@@ -26,6 +26,41 @@
         "tags": ["auth"]
       }
     },
+    "/api/auth/me/display-name": {
+      "put": {
+        "operationId": "AuthController_updateDisplayName",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDisplayNameDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentMemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Modifie le nom d’affichage du membre connecté",
+        "tags": ["auth"]
+      }
+    },
     "/api/auth/me/reservation-color": {
       "put": {
         "operationId": "AuthController_updateReservationColor",
@@ -381,6 +416,18 @@
           "displayName",
           "reservationColor"
         ]
+      },
+      "UpdateDisplayNameDto": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "example": "Camille"
+          }
+        },
+        "required": ["displayName"]
       },
       "UpdateReservationColorDto": {
         "type": "object",

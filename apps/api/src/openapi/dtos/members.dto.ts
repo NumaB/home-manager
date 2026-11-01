@@ -21,6 +21,16 @@ export class CurrentMemberResponseDto {
   reservationColor!: string;
 }
 
+export class UpdateDisplayNameDto {
+  @ApiProperty({
+    type: String,
+    minLength: 1,
+    maxLength: 80,
+    example: "Camille",
+  })
+  displayName!: string;
+}
+
 export class UpdateReservationColorDto {
   @ApiProperty({
     type: String,
