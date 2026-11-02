@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class ReservationCreatorDto {
   @ApiProperty({ type: String })
@@ -30,6 +30,12 @@ export class ReservationResponseDto {
 
   @ApiProperty({ type: String, format: "date-time" })
   createdAt!: string;
+
+  @ApiProperty({ type: String, nullable: true })
+  title!: string | null;
+
+  @ApiProperty({ type: String, nullable: true })
+  description!: string | null;
 
   @ApiProperty({ type: ReservationCreatorDto })
   creator!: ReservationCreatorDto;
@@ -65,6 +71,12 @@ export class ReservationDatesDto {
     pattern: "^\\d{4}-\\d{2}-\\d{2}$",
   })
   endDate!: string;
+
+  @ApiPropertyOptional({ type: String })
+  title?: string;
+
+  @ApiPropertyOptional({ type: String })
+  description?: string;
 }
 
 export class ReservationVoteDto {

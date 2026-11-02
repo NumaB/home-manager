@@ -24,11 +24,15 @@ type ReservationFormProps = {
   locale: string;
   startDate: string;
   endDate: string;
+  title: string;
+  description: string;
   overlaps: Reservation[];
   overlapError: boolean;
   saving: boolean;
   setStartDate: (value: string) => void;
   setEndDate: (value: string) => void;
+  setTitle: (value: string) => void;
+  setDescription: (value: string) => void;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onBack: () => void;
   t: Translate;
@@ -62,6 +66,12 @@ export function ReservationModal({
   );
   const [endDate, setEndDate] = useState(
     modal.type === "details" ? modal.reservation.endDate : "",
+  );
+  const [reservationTitle, setReservationTitle] = useState(
+    modal.type === "details" ? (modal.reservation.title ?? "") : "",
+  );
+  const [description, setDescription] = useState(
+    modal.type === "details" ? (modal.reservation.description ?? "") : "",
   );
   const [overlaps, setOverlaps] = useState<Reservation[]>([]);
   const [overlapError, setOverlapError] = useState(false);
@@ -110,7 +120,12 @@ export function ReservationModal({
     setSaving(true);
     setError("");
     try {
-      const body = JSON.stringify({ startDate, endDate });
+      const body = JSON.stringify({
+        startDate,
+        endDate,
+        title: reservationTitle,
+        description,
+      });
       if (reservation) {
         await api(`reservations/${reservation.id}`, {
           method: "PATCH",
@@ -217,11 +232,15 @@ export function ReservationModal({
             locale={locale}
             startDate={startDate}
             endDate={endDate}
+            title={reservationTitle}
+            description={description}
             overlaps={overlaps}
             overlapError={overlapError}
             saving={saving}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
+            setTitle={setReservationTitle}
+            setDescription={setDescription}
             onSubmit={saveDates}
             onBack={() => setView("details")}
             t={t}
@@ -248,11 +267,15 @@ function ReservationForm({
   locale,
   startDate,
   endDate,
+  title,
+  description,
   overlaps,
   overlapError,
   saving,
   setStartDate,
   setEndDate,
+  setTitle,
+  setDescription,
   onSubmit,
   onBack,
   t,
@@ -260,7 +283,9 @@ function ReservationForm({
   return (
     <form className="grid gap-4" onSubmit={onSubmit}>
       <label className="grid gap-1 text-sm font-semibold text-secondary">
-        {t("calendar.startDate")}
+        <span>
+          {t("calendar.startDate")} <span aria-hidden="true">*</span>
+        </span>
         <input
           className="rounded-lg border border-burgundy/20 bg-light-background px-3 py-2 text-base text-secondary focus:border-primary focus:outline-none"
           type="date"
@@ -270,7 +295,9 @@ function ReservationForm({
         />
       </label>
       <label className="grid gap-1 text-sm font-semibold text-secondary">
-        {t("calendar.endDate")}
+        <span>
+          {t("calendar.endDate")} <span aria-hidden="true">*</span>
+        </span>
         <input
           className="rounded-lg border border-burgundy/20 bg-light-background px-3 py-2 text-base text-secondary focus:border-primary focus:outline-none"
           type="date"
@@ -278,6 +305,23 @@ function ReservationForm({
           required
           value={endDate}
           onChange={(event) => setEndDate(event.target.value)}
+        />
+      </label>
+      <label className="grid gap-1 text-sm font-semibold text-secondary">
+        {t("calendar.reservationTitle")}
+        <input
+          className="rounded-lg border border-burgundy/20 bg-light-background px-3 py-2 text-base font-normal text-secondary focus:border-primary focus:outline-none"
+          type="text"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+        />
+      </label>
+      <label className="grid gap-1 text-sm font-semibold text-secondary">
+        {t("calendar.reservationDescription")}
+        <textarea
+          className="min-h-20 rounded-lg border border-burgundy/20 bg-light-background px-3 py-2 text-base font-normal text-secondary focus:border-primary focus:outline-none"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
         />
       </label>
       {overlapError && (
@@ -309,23 +353,28 @@ function ReservationForm({
           )}
         </div>
       )}
-      <div className="mt-2 flex justify-end gap-2">
-        {reservation && (
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <p className="m-0 text-xs font-normal text-muted">
+          {t("calendar.requiredFields")}
+        </p>
+        <div className="flex justify-end gap-2">
+          {reservation && (
+            <button
+              className="rounded-lg px-4 py-2 text-sm font-semibold text-secondary hover:bg-focused-background"
+              type="button"
+              onClick={onBack}
+            >
+              {t("calendar.back")}
+            </button>
+          )}
           <button
-            className="rounded-lg px-4 py-2 text-sm font-semibold text-secondary hover:bg-focused-background"
-            type="button"
-            onClick={onBack}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background disabled:opacity-50"
+            type="submit"
+            disabled={saving}
           >
-            {t("calendar.back")}
+            {saving ? t("calendar.saving") : t("calendar.save")}
           </button>
-        )}
-        <button
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background disabled:opacity-50"
-          type="submit"
-          disabled={saving}
-        >
-          {saving ? t("calendar.saving") : t("calendar.save")}
-        </button>
+        </div>
       </div>
     </form>
   );
@@ -348,6 +397,22 @@ function ReservationDetails({
           <span className="font-semibold">{t("calendar.member")}</span>{" "}
           {reservation.creator.displayName}
         </p>
+        {reservation.title && (
+          <p className="m-0">
+            <span className="font-semibold">
+              {t("calendar.reservationTitle")} :
+            </span>{" "}
+            {reservation.title}
+          </p>
+        )}
+        {reservation.description && (
+          <p className="m-0 whitespace-pre-wrap">
+            <span className="font-semibold">
+              {t("calendar.reservationDescription")} :
+            </span>{" "}
+            {reservation.description}
+          </p>
+        )}
         <p className="m-0">
           <span className="font-semibold">{t("calendar.period")}</span>{" "}
           {formatDate(reservation.startDate, locale)} –{" "}

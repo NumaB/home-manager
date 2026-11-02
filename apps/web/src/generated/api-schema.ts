@@ -121,7 +121,7 @@ export interface paths {
     delete: operations["ReservationsController_cancel"];
     options?: never;
     head?: never;
-    /** Modifie les dates d'une réservation du membre */
+    /** Modifie les dates et les informations d'une réservation */
     patch: operations["ReservationsController_updateDates"];
     trace?: never;
   };
@@ -220,6 +220,8 @@ export interface components {
       status: "PENDING" | "APPROVED";
       /** Format: date-time */
       createdAt: string;
+      title: string | null;
+      description: string | null;
       creator: components["schemas"]["ReservationCreatorDto"];
       approvals: number;
       rejections: number;
@@ -232,6 +234,8 @@ export interface components {
       startDate: string;
       /** Format: date */
       endDate: string;
+      title?: string;
+      description?: string;
     };
     ReservationVoteDto: {
       /** @enum {string} */

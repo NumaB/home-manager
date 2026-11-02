@@ -29,6 +29,8 @@ export type ReservationView = {
   id: string;
   startDate: string;
   endDate: string;
+  title: string | null;
+  description: string | null;
   status: ReservationStatus;
   createdAt: string;
   creator: { id: string; displayName: string; reservationColor: string };
@@ -60,12 +62,26 @@ function asDateOnly(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
+function optionalText(
+  value: unknown,
+  fieldName: string,
+): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null || value === "") return null;
+  if (typeof value !== "string") {
+    throw new BadRequestException(`${fieldName} must be a string`);
+  }
+  return value;
+}
+
 function present(record: ReservationRecord, memberId: string): ReservationView {
   const counts = countVotes(record.voters.map((voter) => voter.choice));
   return {
     id: record.id,
     startDate: asDateOnly(record.startDate),
     endDate: asDateOnly(record.endDate),
+    title: record.title,
+    description: record.description,
     status: record.status,
     createdAt: record.createdAt.toISOString(),
     creator: record.creator,
@@ -128,9 +144,13 @@ export class ReservationsService {
     member: Member,
     startDateInput: unknown,
     endDateInput: unknown,
+    titleInput?: unknown,
+    descriptionInput?: unknown,
   ): Promise<ReservationView> {
     const startDate = parseDateOnly(startDateInput, "startDate");
     const endDate = parseDateOnly(endDateInput, "endDate");
+    const title = optionalText(titleInput, "title");
+    const description = optionalText(descriptionInput, "description");
     this.assertDateRange(startDate, endDate);
 
     return this.serializable(async (tx) => {
@@ -149,6 +169,8 @@ export class ReservationsService {
           creatorId: member.id,
           startDate,
           endDate,
+          title: title ?? null,
+          description: description ?? null,
           status,
           voters: {
             create: electorate.map(({ id }) => ({ memberId: id })),
@@ -165,9 +187,13 @@ export class ReservationsService {
     member: Member,
     startDateInput: unknown,
     endDateInput: unknown,
+    titleInput?: unknown,
+    descriptionInput?: unknown,
   ): Promise<ReservationView> {
     const startDate = parseDateOnly(startDateInput, "startDate");
     const endDate = parseDateOnly(endDateInput, "endDate");
+    const title = optionalText(titleInput, "title");
+    const description = optionalText(descriptionInput, "description");
     this.assertDateRange(startDate, endDate);
 
     return this.serializable(async (tx) => {
@@ -182,10 +208,20 @@ export class ReservationsService {
         asDateOnly(existing.startDate) === asDateOnly(startDate) &&
         asDateOnly(existing.endDate) === asDateOnly(endDate)
       ) {
-        const unchanged = await tx.reservation.findUniqueOrThrow({
-          where: { id },
-          include: reservationInclude,
-        });
+        const metadata = {
+          ...(title !== undefined ? { title } : {}),
+          ...(description !== undefined ? { description } : {}),
+        };
+        const unchanged = Object.keys(metadata).length
+          ? await tx.reservation.update({
+              where: { id },
+              data: metadata,
+              include: reservationInclude,
+            })
+          : await tx.reservation.findUniqueOrThrow({
+              where: { id },
+              include: reservationInclude,
+            });
         return present(unchanged, member.id);
       }
 
@@ -202,6 +238,8 @@ export class ReservationsService {
         data: {
           startDate,
           endDate,
+          ...(title !== undefined ? { title } : {}),
+          ...(description !== undefined ? { description } : {}),
           status: settings.approvalEnabled
             ? ReservationStatus.PENDING
             : ReservationStatus.APPROVED,

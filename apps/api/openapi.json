@@ -238,7 +238,7 @@
             "clerk-session": []
           }
         ],
-        "summary": "Modifie les dates d'une réservation du membre",
+        "summary": "Modifie les dates et les informations d'une réservation",
         "tags": ["reservations"]
       },
       "delete": {
@@ -481,6 +481,14 @@
             "type": "string",
             "format": "date-time"
           },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
           "creator": {
             "$ref": "#/components/schemas/ReservationCreatorDto"
           },
@@ -508,6 +516,8 @@
           "endDate",
           "status",
           "createdAt",
+          "title",
+          "description",
           "creator",
           "approvals",
           "rejections",
@@ -527,6 +537,12 @@
             "type": "string",
             "format": "date",
             "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         },
         "required": ["startDate", "endDate"]

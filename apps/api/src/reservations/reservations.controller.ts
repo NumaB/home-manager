@@ -73,19 +73,39 @@ export class ReservationsController {
   @ApiBody({ type: ReservationDatesDto })
   @ApiOkResponse({ type: ReservationResponseDto })
   create(
-    @Body() body: { startDate?: unknown; endDate?: unknown },
+    @Body()
+    body: {
+      startDate?: unknown;
+      endDate?: unknown;
+      title?: unknown;
+      description?: unknown;
+    },
     @CurrentMember() member: Member,
   ) {
-    return this.reservations.create(member, body.startDate, body.endDate);
+    return this.reservations.create(
+      member,
+      body.startDate,
+      body.endDate,
+      body.title,
+      body.description,
+    );
   }
 
   @Patch(":id")
-  @ApiOperation({ summary: "Modifie les dates d'une réservation du membre" })
+  @ApiOperation({
+    summary: "Modifie les dates et les informations d'une réservation",
+  })
   @ApiBody({ type: ReservationDatesDto })
   @ApiOkResponse({ type: ReservationResponseDto })
   updateDates(
     @Param("id") id: string,
-    @Body() body: { startDate?: unknown; endDate?: unknown },
+    @Body()
+    body: {
+      startDate?: unknown;
+      endDate?: unknown;
+      title?: unknown;
+      description?: unknown;
+    },
     @CurrentMember() member: Member,
   ) {
     return this.reservations.updateDates(
@@ -93,6 +113,8 @@ export class ReservationsController {
       member,
       body.startDate,
       body.endDate,
+      body.title,
+      body.description,
     );
   }
 

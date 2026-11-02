@@ -43,6 +43,8 @@ model Reservation {
   creatorId   String
   startDate   DateTime             @db.Date
   endDate     DateTime             @db.Date
+  title       String?
+  description String?
   status      ReservationStatus
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt

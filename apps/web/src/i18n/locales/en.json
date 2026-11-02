@@ -97,6 +97,9 @@
     "close": "Close",
     "startDate": "Start date",
     "endDate": "End date",
+    "reservationTitle": "Title",
+    "reservationDescription": "Description",
+    "requiredFields": "* Required fields",
     "save": "Save",
     "saving": "Saving…",
     "back": "Back",
@@ -117,7 +120,7 @@
     "reject": "Reject",
     "cancelReservation": "Cancel reservation",
     "edit": "Edit",
-    "reservationLabel": "Reservation by {{name}}, from {{start}} to {{end}}, status: {{status}}. {{approvals}} approvals out of {{total}}.",
+    "reservationLabel": "Reservation by {{name}}{{title}}, from {{start}} to {{end}}, status: {{status}}. {{approvals}} approvals out of {{total}}.",
     "status": {
       "pending": "pending approval",
       "approved": "approved"

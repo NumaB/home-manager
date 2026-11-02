@@ -44,9 +44,12 @@ export function CalendarWeek({
       {segments.map(({ reservation, startColumn, endColumn, lane }) => {
         const isPending = reservation.status === "PENDING";
         const isHighlighted = hoveredReservationId === reservation.id;
-        const label = isPending
-          ? `${reservation.creator.displayName} ${reservation.approvals}/${reservation.totalEligibleVoters}`
+        const displayName = reservation.title
+          ? `${reservation.creator.displayName} - ${reservation.title}`
           : reservation.creator.displayName;
+        const label = isPending
+          ? `${displayName} ${reservation.approvals}/${reservation.totalEligibleVoters}`
+          : displayName;
         return (
           <button
             key={`${reservation.id}-${days[0].dateKey}`}
@@ -63,6 +66,7 @@ export function CalendarWeek({
             type="button"
             aria-label={t("calendar.reservationLabel", {
               name: reservation.creator.displayName,
+              title: reservation.title ? `, ${reservation.title}` : "",
               start: formatDate(reservation.startDate, locale),
               end: formatDate(reservation.endDate, locale),
               status: t(`calendar.status.${reservation.status.toLowerCase()}`),
