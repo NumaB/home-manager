@@ -117,15 +117,31 @@ export class ReservationsService {
       throw new BadRequestException("month must use YYYY-MM format");
     }
     const firstDay = new Date(`${month}-01T00:00:00.000Z`);
-    const lastDay = new Date(
+    const mondayOffset = (firstDay.getUTCDay() + 6) % 7;
+    const firstCalendarDay = new Date(
+      Date.UTC(
+        firstDay.getUTCFullYear(),
+        firstDay.getUTCMonth(),
+        1 - mondayOffset,
+      ),
+    );
+    const daysInMonth = new Date(
       Date.UTC(firstDay.getUTCFullYear(), firstDay.getUTCMonth() + 1, 0),
+    ).getUTCDate();
+    const weekCount = Math.ceil((mondayOffset + daysInMonth) / 7);
+    const lastCalendarDay = new Date(
+      Date.UTC(
+        firstCalendarDay.getUTCFullYear(),
+        firstCalendarDay.getUTCMonth(),
+        firstCalendarDay.getUTCDate() + weekCount * 7 - 1,
+      ),
     );
     const [settings, records] = await Promise.all([
       this.getBookingSettings(),
       this.prisma.reservation.findMany({
         where: {
-          startDate: { lte: lastDay },
-          endDate: { gte: firstDay },
+          startDate: { lte: lastCalendarDay },
+          endDate: { gte: firstCalendarDay },
         },
         include: reservationInclude,
         orderBy: [{ startDate: "asc" }, { createdAt: "asc" }],

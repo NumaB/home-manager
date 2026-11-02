@@ -48,6 +48,34 @@ function createService() {
 
 const member = (id: string) => ({ id }) as Member;
 
+test("lists reservations covering all days visible in the month grid", async () => {
+  let query:
+    | { where: { startDate: { lte: Date }; endDate: { gte: Date } } }
+    | undefined;
+  const service = new ReservationsService({
+    reservation: {
+      findMany: async (args: typeof query) => {
+        query = args;
+        return [];
+      },
+    },
+    bookingSettings: {
+      upsert: async () => ({ approvalEnabled: false }),
+    },
+  } as unknown as PrismaService);
+
+  await service.listForMonth("2026-12", "member-1");
+
+  assert.equal(
+    query?.where.endDate.gte.toISOString(),
+    "2026-11-30T00:00:00.000Z",
+  );
+  assert.equal(
+    query?.where.startDate.lte.toISOString(),
+    "2027-01-03T00:00:00.000Z",
+  );
+});
+
 test("the creator and the member a reservation is for can edit it", async () => {
   const service = createService();
   for (const id of ["creator-1", "member-1"]) {
