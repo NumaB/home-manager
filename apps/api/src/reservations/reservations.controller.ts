@@ -103,7 +103,8 @@ export class ReservationsController {
 
   @Patch(":id")
   @ApiOperation({
-    summary: "Modifie les dates et les informations d'une réservation",
+    summary:
+      "Modifie une réservation créée par le membre connecté ou faite en son nom",
   })
   @ApiBody({ type: ReservationDatesDto })
   @ApiOkResponse({ type: ReservationResponseDto })
@@ -133,7 +134,10 @@ export class ReservationsController {
   @Delete(":id")
   @HttpCode(204)
   @ApiNoContentResponse({ description: "Réservation annulée" })
-  @ApiOperation({ summary: "Annule une réservation du membre connecté" })
+  @ApiOperation({
+    summary:
+      "Annule une réservation créée par le membre connecté ou faite en son nom",
+  })
   cancel(@Param("id") id: string, @CurrentMember() member: Member) {
     return this.reservations.cancel(id, member);
   }

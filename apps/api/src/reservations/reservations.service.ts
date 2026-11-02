@@ -230,9 +230,12 @@ export class ReservationsService {
     return this.serializable(async (tx) => {
       const existing = await tx.reservation.findUnique({ where: { id } });
       if (!existing) throw new NotFoundException("Reservation not found");
-      if (existing.creatorId !== member.id) {
+      if (
+        existing.creatorId !== member.id &&
+        existing.reservedForId !== member.id
+      ) {
         throw new ForbiddenException(
-          "Only the creator can edit this reservation",
+          "Only the creator or the member the reservation is for can edit it",
         );
       }
       const settings = await this.settingsIn(tx);
@@ -296,12 +299,15 @@ export class ReservationsService {
     await this.serializable(async (tx) => {
       const existing = await tx.reservation.findUnique({
         where: { id },
-        select: { creatorId: true },
+        select: { creatorId: true, reservedForId: true },
       });
       if (!existing) throw new NotFoundException("Reservation not found");
-      if (existing.creatorId !== member.id) {
+      if (
+        existing.creatorId !== member.id &&
+        existing.reservedForId !== member.id
+      ) {
         throw new ForbiddenException(
-          "Only the creator can cancel this reservation",
+          "Only the creator or the member the reservation is for can cancel it",
         );
       }
       await tx.reservation.delete({ where: { id } });

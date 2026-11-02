@@ -94,7 +94,9 @@ export function ReservationModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const reservation = modal.type === "details" ? modal.reservation : null;
-  const ownsReservation = reservation?.creator.id === member.id;
+  const ownsReservation =
+    reservation?.creator.id === member.id ||
+    reservation?.reservedFor.id === member.id;
 
   useEffect(() => {
     if (modal.type !== "create") return;

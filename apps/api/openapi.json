@@ -266,7 +266,7 @@
             "clerk-session": []
           }
         ],
-        "summary": "Modifie les dates et les informations d'une réservation",
+        "summary": "Modifie une réservation créée par le membre connecté ou faite en son nom",
         "tags": ["reservations"]
       },
       "delete": {
@@ -282,7 +282,7 @@
             "clerk-session": []
           }
         ],
-        "summary": "Annule une réservation du membre connecté",
+        "summary": "Annule une réservation créée par le membre connecté ou faite en son nom",
         "tags": ["reservations"]
       }
     },

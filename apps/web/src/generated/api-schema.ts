@@ -134,11 +134,11 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Annule une réservation du membre connecté */
+    /** Annule une réservation créée par le membre connecté ou faite en son nom */
     delete: operations["ReservationsController_cancel"];
     options?: never;
     head?: never;
-    /** Modifie les dates et les informations d'une réservation */
+    /** Modifie une réservation créée par le membre connecté ou faite en son nom */
     patch: operations["ReservationsController_updateDates"];
     trace?: never;
   };
