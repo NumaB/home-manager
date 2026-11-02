@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   buildCalendarWeeks,
   dateKey,
+  layoutDateRangeWeekSegment,
   layoutWeekSegments,
 } from "./calendar-date-utils";
 
@@ -43,6 +44,32 @@ test("lays out overlapping reservations on separate lanes and clips to the week"
       { id: "c", startColumn: 0, endColumn: 1, lane: 1 },
       { id: "b", startColumn: 5, endColumn: 6, lane: 1 },
     ],
+  );
+});
+
+test("clips a selected date range to each week", () => {
+  const weeks = buildCalendarWeeks(2026, 11);
+  const range = { startDate: "2026-12-05", endDate: "2026-12-09" };
+
+  assert.deepEqual(layoutDateRangeWeekSegment(weeks[0], range), {
+    startColumn: 5,
+    endColumn: 6,
+  });
+  assert.deepEqual(layoutDateRangeWeekSegment(weeks[1], range), {
+    startColumn: 0,
+    endColumn: 2,
+  });
+  assert.equal(layoutDateRangeWeekSegment(weeks[3], range), null);
+});
+
+test("normalizes a reversed selected date range", () => {
+  const week = buildCalendarWeeks(2026, 11)[1];
+  assert.deepEqual(
+    layoutDateRangeWeekSegment(week, {
+      startDate: "2026-12-09",
+      endDate: "2026-12-07",
+    }),
+    { startColumn: 0, endColumn: 2 },
   );
 });
 

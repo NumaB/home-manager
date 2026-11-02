@@ -5,7 +5,7 @@ export type Reservation = components["schemas"]["ReservationResponseDto"];
 export type CurrentMember = components["schemas"]["CurrentMemberResponseDto"];
 
 export type ModalState =
-  | { type: "create" }
+  | { type: "create"; startDate?: string; endDate?: string }
   | { type: "details"; reservation: Reservation };
 
 export type Translate = (

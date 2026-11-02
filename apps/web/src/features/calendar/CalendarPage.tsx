@@ -9,6 +9,7 @@ import {
   shiftMonth,
 } from "./calendar-formatters";
 import { ReservationModal } from "./ReservationModal";
+import { useCalendarDateSelection } from "./useCalendarDateSelection";
 import type { CurrentMember, ModalState, Reservation } from "./calendar-types";
 
 export function CalendarPage() {
@@ -21,6 +22,18 @@ export function CalendarPage() {
   const [error, setError] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const [modal, setModal] = useState<ModalState | null>(null);
+  const {
+    previewRange,
+    previewColor,
+    setPreviewColor,
+    isPointerDragging,
+    handleDayPointerDown,
+    handleDayClick,
+    clearPreview,
+  } = useCalendarDateSelection({
+    defaultColor: member?.reservationColor ?? null,
+    onCreate: (range) => setModal({ type: "create", ...range }),
+  });
   const [hoveredReservationId, setHoveredReservationId] = useState<
     string | null
   >(null);
@@ -164,6 +177,11 @@ export function CalendarPage() {
             onSelect={(reservation) =>
               setModal({ type: "details", reservation })
             }
+            onDayPointerDown={handleDayPointerDown}
+            onDaySelect={handleDayClick}
+            previewRange={previewRange}
+            previewColor={previewColor}
+            isPointerDragging={isPointerDragging}
             t={t}
           />
         ))}
@@ -176,15 +194,24 @@ export function CalendarPage() {
 
       {modal && member && (
         <ReservationModal
-          key={modal.type === "create" ? "create" : modal.reservation.id}
+          key={
+            modal.type === "create"
+              ? `create-${modal.startDate ?? ""}-${modal.endDate ?? ""}`
+              : modal.reservation.id
+          }
           modal={modal}
           member={member}
           locale={i18n.language}
           api={api}
           t={t}
-          onClose={() => setModal(null)}
+          onReservedForColorChange={setPreviewColor}
+          onClose={() => {
+            setModal(null);
+            clearPreview();
+          }}
           onChanged={() => {
             setModal(null);
+            clearPreview();
             reload();
           }}
         />

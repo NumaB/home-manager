@@ -16,6 +16,7 @@ type ReservationModalProps = {
   locale: string;
   api: ApiClient;
   t: Translate;
+  onReservedForColorChange: (color: string) => void;
   onClose: () => void;
   onChanged: () => void;
 };
@@ -59,6 +60,7 @@ export function ReservationModal({
   locale,
   api,
   t,
+  onReservedForColorChange,
   onClose,
   onChanged,
 }: ReservationModalProps) {
@@ -66,10 +68,14 @@ export function ReservationModal({
     modal.type === "create" ? "form" : "details",
   );
   const [startDate, setStartDate] = useState(
-    modal.type === "details" ? modal.reservation.startDate : "",
+    modal.type === "details"
+      ? modal.reservation.startDate
+      : (modal.startDate ?? ""),
   );
   const [endDate, setEndDate] = useState(
-    modal.type === "details" ? modal.reservation.endDate : "",
+    modal.type === "details"
+      ? modal.reservation.endDate
+      : (modal.endDate ?? ""),
   );
   const [reservationTitle, setReservationTitle] = useState(
     modal.type === "details" ? (modal.reservation.title ?? "") : "",
@@ -89,6 +95,20 @@ export function ReservationModal({
   const [error, setError] = useState("");
   const reservation = modal.type === "details" ? modal.reservation : null;
   const ownsReservation = reservation?.creator.id === member.id;
+
+  useEffect(() => {
+    if (modal.type !== "create") return;
+    const selectedMember = activeMembers.find(({ id }) => id === reservedForId);
+    onReservedForColorChange(
+      selectedMember?.reservationColor ?? member.reservationColor,
+    );
+  }, [
+    activeMembers,
+    member.reservationColor,
+    modal.type,
+    onReservedForColorChange,
+    reservedForId,
+  ]);
 
   useEffect(() => {
     let cancelled = false;

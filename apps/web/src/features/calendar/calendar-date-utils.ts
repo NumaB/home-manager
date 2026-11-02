@@ -10,6 +10,11 @@ export type CalendarDay = {
   inMonth: boolean;
 };
 
+export type CalendarDateRange = {
+  startDate: string;
+  endDate: string;
+};
+
 export type CalendarSegment<T extends CalendarReservation> = {
   reservation: T;
   startColumn: number;
@@ -54,6 +59,32 @@ export function buildCalendarWeeks(
       };
     }),
   );
+}
+
+export function layoutDateRangeWeekSegment(
+  days: readonly CalendarDay[],
+  range: CalendarDateRange,
+): { startColumn: number; endColumn: number } | null {
+  if (days.length === 0) return null;
+
+  const startDate =
+    range.startDate <= range.endDate ? range.startDate : range.endDate;
+  const endDate =
+    range.startDate >= range.endDate ? range.startDate : range.endDate;
+  if (endDate < days[0].dateKey || startDate > days[days.length - 1].dateKey) {
+    return null;
+  }
+
+  const startColumn = Math.max(
+    0,
+    days.findIndex((day) => day.dateKey >= startDate),
+  );
+  const endColumn = days.reduce(
+    (lastIndex, day, index) => (day.dateKey <= endDate ? index : lastIndex),
+    -1,
+  );
+
+  return { startColumn, endColumn };
 }
 
 export function layoutWeekSegments<T extends CalendarReservation>(
