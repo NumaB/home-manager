@@ -123,7 +123,8 @@
     "reject": "Désapprouver",
     "cancelReservation": "Annuler la réservation",
     "edit": "Modifier",
-    "reservationLabel": "Réservation de {{name}}{{title}}, du {{start}} au {{end}}, statut : {{status}}. {{approvals}} approbations sur {{total}}.",
+    "reservationLabel": "Réservation de {{name}}{{title}}, du {{start}} au {{end}}{{approvalInfo}}",
+    "reservationApprovalInfo": ". Statut : {{status}}. {{approvals}} approbations sur {{total}}.",
     "status": {
       "pending": "en attente d’approbation",
       "approved": "validée"

@@ -521,6 +521,9 @@
             "type": "string",
             "enum": ["PENDING", "APPROVED"]
           },
+          "approvalEnabled": {
+            "type": "boolean"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -562,6 +565,7 @@
           "startDate",
           "endDate",
           "status",
+          "approvalEnabled",
           "createdAt",
           "title",
           "description",

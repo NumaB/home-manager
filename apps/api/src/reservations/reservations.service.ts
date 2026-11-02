@@ -35,6 +35,7 @@ export type ReservationView = {
   title: string | null;
   description: string | null;
   status: ReservationStatus;
+  approvalEnabled: boolean;
   createdAt: string;
   creator: { id: string; displayName: string; reservationColor: string };
   reservedFor: { id: string; displayName: string; reservationColor: string };
@@ -78,7 +79,11 @@ function optionalText(
   return value;
 }
 
-function present(record: ReservationRecord, memberId: string): ReservationView {
+function present(
+  record: ReservationRecord,
+  memberId: string,
+  approvalEnabled: boolean,
+): ReservationView {
   const counts = countVotes(record.voters.map((voter) => voter.choice));
   return {
     id: record.id,
@@ -87,6 +92,7 @@ function present(record: ReservationRecord, memberId: string): ReservationView {
     title: record.title,
     description: record.description,
     status: record.status,
+    approvalEnabled,
     createdAt: record.createdAt.toISOString(),
     creator: record.creator,
     reservedFor: record.reservedFor,
@@ -114,15 +120,20 @@ export class ReservationsService {
     const lastDay = new Date(
       Date.UTC(firstDay.getUTCFullYear(), firstDay.getUTCMonth() + 1, 0),
     );
-    const records = await this.prisma.reservation.findMany({
-      where: {
-        startDate: { lte: lastDay },
-        endDate: { gte: firstDay },
-      },
-      include: reservationInclude,
-      orderBy: [{ startDate: "asc" }, { createdAt: "asc" }],
-    });
-    return records.map((record) => present(record, memberId));
+    const [settings, records] = await Promise.all([
+      this.getBookingSettings(),
+      this.prisma.reservation.findMany({
+        where: {
+          startDate: { lte: lastDay },
+          endDate: { gte: firstDay },
+        },
+        include: reservationInclude,
+        orderBy: [{ startDate: "asc" }, { createdAt: "asc" }],
+      }),
+    ]);
+    return records.map((record) =>
+      present(record, memberId, settings.approvalEnabled),
+    );
   }
 
   async findOverlaps(
@@ -133,16 +144,23 @@ export class ReservationsService {
     const startDate = parseDateOnly(startDateInput, "startDate");
     const endDate = parseDateOnly(endDateInput, "endDate");
     this.assertDateRange(startDate, endDate);
-    const records = await this.prisma.reservation.findMany({
-      where: {
-        startDate: { lte: endDate },
-        endDate: { gte: startDate },
-        ...(excludeReservationId ? { id: { not: excludeReservationId } } : {}),
-      },
-      include: reservationInclude,
-      orderBy: [{ startDate: "asc" }, { createdAt: "asc" }],
-    });
-    return records.map((record) => present(record, ""));
+    const [settings, records] = await Promise.all([
+      this.getBookingSettings(),
+      this.prisma.reservation.findMany({
+        where: {
+          startDate: { lte: endDate },
+          endDate: { gte: startDate },
+          ...(excludeReservationId
+            ? { id: { not: excludeReservationId } }
+            : {}),
+        },
+        include: reservationInclude,
+        orderBy: [{ startDate: "asc" }, { createdAt: "asc" }],
+      }),
+    ]);
+    return records.map((record) =>
+      present(record, "", settings.approvalEnabled),
+    );
   }
 
   async create(
@@ -187,7 +205,7 @@ export class ReservationsService {
         },
         include: reservationInclude,
       });
-      return present(record, member.id);
+      return present(record, member.id, settings.approvalEnabled);
     });
   }
 
@@ -217,6 +235,7 @@ export class ReservationsService {
           "Only the creator can edit this reservation",
         );
       }
+      const settings = await this.settingsIn(tx);
       if (
         asDateOnly(existing.startDate) === asDateOnly(startDate) &&
         asDateOnly(existing.endDate) === asDateOnly(endDate)
@@ -238,10 +257,9 @@ export class ReservationsService {
               where: { id },
               include: reservationInclude,
             });
-        return present(unchanged, member.id);
+        return present(unchanged, member.id, settings.approvalEnabled);
       }
 
-      const settings = await this.settingsIn(tx);
       const electorate = settings.approvalEnabled
         ? await tx.member.findMany({
             where: { isActive: true },
@@ -270,7 +288,7 @@ export class ReservationsService {
         },
         include: reservationInclude,
       });
-      return present(record, member.id);
+      return present(record, member.id, settings.approvalEnabled);
     });
   }
 
@@ -329,13 +347,16 @@ export class ReservationsService {
       });
       const outcome = await this.resolvePendingIn(tx, id);
       if (outcome === "REJECTED") return { deleted: true, reservation: null };
+      const settings = await this.settingsIn(tx);
       const record = await tx.reservation.findUnique({
         where: { id },
         include: reservationInclude,
       });
       return {
         deleted: false,
-        reservation: record ? present(record, member.id) : null,
+        reservation: record
+          ? present(record, member.id, settings.approvalEnabled)
+          : null,
       };
     });
   }

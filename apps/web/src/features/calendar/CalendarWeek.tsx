@@ -106,9 +106,15 @@ export function CalendarWeek({
               title: reservation.title ? `, ${reservation.title}` : "",
               start: formatDate(reservation.startDate, locale),
               end: formatDate(reservation.endDate, locale),
-              status: t(`calendar.status.${reservation.status.toLowerCase()}`),
-              approvals: reservation.approvals,
-              total: reservation.totalEligibleVoters,
+              approvalInfo: reservation.approvalEnabled
+                ? t("calendar.reservationApprovalInfo", {
+                    status: t(
+                      `calendar.status.${reservation.status.toLowerCase()}`,
+                    ),
+                    approvals: reservation.approvals,
+                    total: reservation.totalEligibleVoters,
+                  })
+                : "",
             })}
             onClick={() => onSelect(reservation)}
             onMouseEnter={() => onReservationHover(reservation.id)}

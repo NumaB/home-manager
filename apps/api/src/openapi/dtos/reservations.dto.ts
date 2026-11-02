@@ -28,6 +28,9 @@ export class ReservationResponseDto {
   @ApiProperty({ type: String, enum: ["PENDING", "APPROVED"] })
   status!: "PENDING" | "APPROVED";
 
+  @ApiProperty({ type: Boolean })
+  approvalEnabled!: boolean;
+
   @ApiProperty({ type: String, format: "date-time" })
   createdAt!: string;
 

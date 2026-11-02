@@ -497,10 +497,12 @@ function ReservationDetails({
           {formatDate(reservation.startDate, locale)} –{" "}
           {formatDate(reservation.endDate, locale)}
         </p>
-        <p className="m-0">
-          <span className="font-semibold">{t("calendar.statusLabel")}</span>{" "}
-          {t(`calendar.status.${reservation.status.toLowerCase()}`)}
-        </p>
+        {reservation.approvalEnabled && (
+          <p className="m-0">
+            <span className="font-semibold">{t("calendar.statusLabel")}</span>{" "}
+            {t(`calendar.status.${reservation.status.toLowerCase()}`)}
+          </p>
+        )}
         {reservation.status === "PENDING" && (
           <p className="m-0">
             <span className="font-semibold">{t("calendar.votes")}</span>{" "}

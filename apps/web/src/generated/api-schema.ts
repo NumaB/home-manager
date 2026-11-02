@@ -240,6 +240,7 @@ export interface components {
       endDate: string;
       /** @enum {string} */
       status: "PENDING" | "APPROVED";
+      approvalEnabled: boolean;
       /** Format: date-time */
       createdAt: string;
       title: string | null;
