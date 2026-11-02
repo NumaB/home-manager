@@ -10,6 +10,10 @@ Si l'alias nécessaire n'existe pas encore, configure-le dans TypeScript et dans
 
 Évite d'ajouter des couleurs en dur dans le code (par exemple dans les classes Tailwind arbitraires). Ajoute-les plutôt dans `apps/web/src/utils/colors.js`, en leur donnant un nom fonctionnel lié à leur usage plutôt qu'un nom descriptif de la couleur, puis expose ce token dans la configuration Tailwind si nécessaire.
 
+## Curseur des éléments interactifs
+
+Ajoute `cursor-pointer` aux éléments interactifs qui déclenchent une action au clic (boutons, liens, sélecteurs personnalisés, options de menu, etc.) afin que le curseur indique clairement qu'ils sont cliquables. Pour les contrôles désactivés, utilise `disabled:cursor-not-allowed`.
+
 ## Contrats API et types du front
 
 Quand tu ajoutes ou modifies une fonctionnalité côté API (route, DTO, enum, requête ou réponse) susceptible d'être consommée par le front :

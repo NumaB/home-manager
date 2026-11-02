@@ -93,7 +93,7 @@ export function CalendarPage() {
       <header className="mb-4 flex items-center justify-between gap-3 px-1">
         <div className="flex min-w-0 items-center gap-2">
           <button
-            className="grid size-8 shrink-0 place-items-center rounded-full text-primary hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-primary"
+            className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full text-primary hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-primary"
             type="button"
             aria-label={t("calendar.previousMonth")}
             onClick={goToPreviousMonth}
@@ -103,7 +103,7 @@ export function CalendarPage() {
             </span>
           </button>
           <button
-            className="grid size-8 shrink-0 place-items-center rounded-full text-primary hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-primary"
+            className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full text-primary hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-primary"
             type="button"
             aria-label={t("calendar.nextMonth")}
             onClick={goToNextMonth}
@@ -120,7 +120,7 @@ export function CalendarPage() {
           </h1>
         </div>
         <button
-          className="grid size-10 shrink-0 place-items-center rounded-full text-teal hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-primary"
+          className="grid size-10 shrink-0 cursor-pointer place-items-center rounded-full text-teal hover:bg-focused-background focus-visible:outline-2 focus-visible:outline-primary"
           type="button"
           aria-label={t("calendar.createReservation")}
           onClick={() => setModal({ type: "create" })}
@@ -141,7 +141,7 @@ export function CalendarPage() {
         >
           <span>{error}</span>
           <button
-            className="font-semibold underline"
+            className="cursor-pointer font-semibold underline"
             type="button"
             onClick={reload}
           >

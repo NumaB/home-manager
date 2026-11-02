@@ -48,7 +48,7 @@ export function Select({
   return (
     <div className="relative" ref={containerRef}>
       <button
-        className="flex w-full items-center justify-between rounded-lg border border-burgundy/20 bg-light-background py-2 pl-3 pr-4 text-left text-base font-normal text-secondary focus:border-primary focus:outline-none"
+        className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-burgundy/20 bg-light-background py-2 pl-3 pr-4 text-left text-base font-normal text-secondary focus:border-primary focus:outline-none"
         type="button"
         role="combobox"
         aria-haspopup="listbox"
@@ -92,7 +92,7 @@ export function Select({
           {options.map((option) => (
             <li key={option.value} role="presentation">
               <button
-                className={`w-full px-3 py-2 text-left text-base font-normal ${option.value === value ? "bg-focused-background text-primary" : "text-secondary hover:bg-focused-background"}`}
+                className={`w-full cursor-pointer px-3 py-2 text-left text-base font-normal ${option.value === value ? "bg-focused-background text-primary" : "text-secondary hover:bg-focused-background"}`}
                 type="button"
                 role="option"
                 aria-selected={option.value === value}

@@ -259,7 +259,7 @@ export function ReservationModal({
             {title}
           </h2>
           <button
-            className="rounded-lg px-2 py-1 text-2xl leading-none text-secondary hover:bg-focused-background"
+            className="cursor-pointer rounded-lg px-2 py-1 text-2xl leading-none text-secondary hover:bg-focused-background"
             type="button"
             aria-label={t("calendar.close")}
             onClick={onClose}
@@ -433,7 +433,7 @@ function ReservationForm({
         <div className="flex justify-end gap-2">
           {reservation && (
             <button
-              className="rounded-lg px-4 py-2 text-sm font-semibold text-secondary hover:bg-focused-background"
+              className="cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-secondary hover:bg-focused-background"
               type="button"
               onClick={onBack}
             >
@@ -441,7 +441,7 @@ function ReservationForm({
             </button>
           )}
           <button
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background disabled:opacity-50"
+            className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background disabled:cursor-not-allowed disabled:opacity-50"
             type="submit"
             disabled={saving}
           >
@@ -512,7 +512,7 @@ function ReservationDetails({
       {reservation.status === "PENDING" && (
         <div className="grid grid-cols-2 gap-2">
           <button
-            className={`rounded-lg border px-3 py-2 text-sm font-semibold ${reservation.currentMemberVote === "APPROVE" ? "border-primary bg-primary text-light-background" : "border-primary text-primary"}`}
+            className={`cursor-pointer rounded-lg border px-3 py-2 text-sm font-semibold disabled:cursor-not-allowed ${reservation.currentMemberVote === "APPROVE" ? "border-primary bg-primary text-light-background" : "border-primary text-primary"}`}
             type="button"
             disabled={saving}
             onClick={() => onVote("APPROVE")}
@@ -520,7 +520,7 @@ function ReservationDetails({
             {t("calendar.approve")}
           </button>
           <button
-            className={`rounded-lg border px-3 py-2 text-sm font-semibold ${reservation.currentMemberVote === "REJECT" ? "border-burgundy bg-burgundy text-light-background" : "border-burgundy text-burgundy"}`}
+            className={`cursor-pointer rounded-lg border px-3 py-2 text-sm font-semibold disabled:cursor-not-allowed ${reservation.currentMemberVote === "REJECT" ? "border-burgundy bg-burgundy text-light-background" : "border-burgundy text-burgundy"}`}
             type="button"
             disabled={saving}
             onClick={() => onVote("REJECT")}
@@ -532,7 +532,7 @@ function ReservationDetails({
       {ownsReservation && (
         <div className="flex flex-wrap justify-end gap-2 border-t border-burgundy/10 pt-4">
           <button
-            className="rounded-lg px-3 py-2 text-sm font-semibold text-burgundy hover:bg-burgundy/10"
+            className="cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-burgundy hover:bg-burgundy/10 disabled:cursor-not-allowed"
             type="button"
             disabled={saving}
             onClick={onCancel}
@@ -540,7 +540,7 @@ function ReservationDetails({
             {t("calendar.cancelReservation")}
           </button>
           <button
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background"
+            className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-light-background disabled:cursor-not-allowed"
             type="button"
             disabled={saving}
             onClick={onEdit}
