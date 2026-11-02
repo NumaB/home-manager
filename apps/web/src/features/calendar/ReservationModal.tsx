@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Select } from "@components/form/Select";
 import { formatDate } from "./calendar-formatters";
 import type {
   ApiClient,
@@ -26,6 +27,8 @@ type ReservationFormProps = {
   endDate: string;
   title: string;
   description: string;
+  reservedForId: string;
+  activeMembers: Reservation["reservedFor"][];
   overlaps: Reservation[];
   overlapError: boolean;
   saving: boolean;
@@ -33,6 +36,7 @@ type ReservationFormProps = {
   setEndDate: (value: string) => void;
   setTitle: (value: string) => void;
   setDescription: (value: string) => void;
+  setReservedForId: (value: string) => void;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onBack: () => void;
   t: Translate;
@@ -73,12 +77,38 @@ export function ReservationModal({
   const [description, setDescription] = useState(
     modal.type === "details" ? (modal.reservation.description ?? "") : "",
   );
+  const [reservedForId, setReservedForId] = useState(
+    modal.type === "details" ? modal.reservation.reservedFor.id : member.id,
+  );
+  const [activeMembers, setActiveMembers] = useState<
+    Reservation["reservedFor"][]
+  >([modal.type === "details" ? modal.reservation.reservedFor : member]);
   const [overlaps, setOverlaps] = useState<Reservation[]>([]);
   const [overlapError, setOverlapError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const reservation = modal.type === "details" ? modal.reservation : null;
   const ownsReservation = reservation?.creator.id === member.id;
+
+  useEffect(() => {
+    let cancelled = false;
+    void api<Reservation["reservedFor"][]>("reservations/members").then(
+      (items) => {
+        if (!cancelled) {
+          setActiveMembers(items);
+          setReservedForId((currentId) =>
+            items.some(({ id }) => id === currentId) ? currentId : member.id,
+          );
+        }
+      },
+      () => {
+        if (!cancelled) setError(t("calendar.membersLoadError"));
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [api, member.id, t]);
 
   useEffect(() => {
     if (!startDate || !endDate || startDate > endDate) {
@@ -125,6 +155,7 @@ export function ReservationModal({
         endDate,
         title: reservationTitle,
         description,
+        reservedForId,
       });
       if (reservation) {
         await api(`reservations/${reservation.id}`, {
@@ -234,6 +265,8 @@ export function ReservationModal({
             endDate={endDate}
             title={reservationTitle}
             description={description}
+            reservedForId={reservedForId}
+            activeMembers={activeMembers}
             overlaps={overlaps}
             overlapError={overlapError}
             saving={saving}
@@ -241,6 +274,7 @@ export function ReservationModal({
             setEndDate={setEndDate}
             setTitle={setReservationTitle}
             setDescription={setDescription}
+            setReservedForId={setReservedForId}
             onSubmit={saveDates}
             onBack={() => setView("details")}
             t={t}
@@ -269,6 +303,8 @@ function ReservationForm({
   endDate,
   title,
   description,
+  reservedForId,
+  activeMembers,
   overlaps,
   overlapError,
   saving,
@@ -276,6 +312,7 @@ function ReservationForm({
   setEndDate,
   setTitle,
   setDescription,
+  setReservedForId,
   onSubmit,
   onBack,
   t,
@@ -324,6 +361,22 @@ function ReservationForm({
           onChange={(event) => setDescription(event.target.value)}
         />
       </label>
+      <div className="grid gap-1 text-sm font-semibold text-secondary">
+        <span id="reserved-for-label">
+          {t("calendar.reservedFor")} <span aria-hidden="true">*</span>
+        </span>
+        <Select
+          options={activeMembers.map(({ id, displayName }) => ({
+            value: id,
+            label: displayName,
+          }))}
+          value={reservedForId}
+          onChange={setReservedForId}
+          labelledBy="reserved-for-label"
+          menuPosition="above"
+          required
+        />
+      </div>
       {overlapError && (
         <p className="m-0 text-sm text-muted">
           {t("calendar.overlapCheckUnavailable")}
@@ -395,8 +448,14 @@ function ReservationDetails({
       <div className="grid gap-2 text-sm text-secondary">
         <p className="m-0">
           <span className="font-semibold">{t("calendar.member")}</span>{" "}
-          {reservation.creator.displayName}
+          {reservation.reservedFor.displayName}
         </p>
+        {reservation.reservedFor.id !== reservation.creator.id && (
+          <p className="m-0">
+            <span className="font-semibold">{t("calendar.reservedBy")}</span>{" "}
+            {reservation.creator.displayName}
+          </p>
+        )}
         {reservation.title && (
           <p className="m-0">
             <span className="font-semibold">

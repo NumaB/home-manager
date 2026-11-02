@@ -16,6 +16,9 @@ import { countVotes, resolveVoteOutcome } from "./reservation-rules";
 
 const reservationInclude = {
   creator: { select: { id: true, displayName: true, reservationColor: true } },
+  reservedFor: {
+    select: { id: true, displayName: true, reservationColor: true },
+  },
   voters: { select: { memberId: true, choice: true } },
 } satisfies Prisma.ReservationInclude;
 
@@ -34,6 +37,7 @@ export type ReservationView = {
   status: ReservationStatus;
   createdAt: string;
   creator: { id: string; displayName: string; reservationColor: string };
+  reservedFor: { id: string; displayName: string; reservationColor: string };
   approvals: number;
   rejections: number;
   totalEligibleVoters: number;
@@ -85,6 +89,7 @@ function present(record: ReservationRecord, memberId: string): ReservationView {
     status: record.status,
     createdAt: record.createdAt.toISOString(),
     creator: record.creator,
+    reservedFor: record.reservedFor,
     approvals: counts.approvals,
     rejections: counts.rejections,
     totalEligibleVoters: counts.eligible,
@@ -146,12 +151,15 @@ export class ReservationsService {
     endDateInput: unknown,
     titleInput?: unknown,
     descriptionInput?: unknown,
+    reservedForIdInput?: unknown,
   ): Promise<ReservationView> {
     const startDate = parseDateOnly(startDateInput, "startDate");
     const endDate = parseDateOnly(endDateInput, "endDate");
     const title = optionalText(titleInput, "title");
     const description = optionalText(descriptionInput, "description");
+    const reservedForId = reservedForIdInput ?? member.id;
     this.assertDateRange(startDate, endDate);
+    await this.assertActiveMember(reservedForId);
 
     return this.serializable(async (tx) => {
       const settings = await this.settingsIn(tx);
@@ -167,6 +175,7 @@ export class ReservationsService {
       const record = await tx.reservation.create({
         data: {
           creatorId: member.id,
+          reservedForId: reservedForId as string,
           startDate,
           endDate,
           title: title ?? null,
@@ -189,11 +198,15 @@ export class ReservationsService {
     endDateInput: unknown,
     titleInput?: unknown,
     descriptionInput?: unknown,
+    reservedForIdInput?: unknown,
   ): Promise<ReservationView> {
     const startDate = parseDateOnly(startDateInput, "startDate");
     const endDate = parseDateOnly(endDateInput, "endDate");
     const title = optionalText(titleInput, "title");
     const description = optionalText(descriptionInput, "description");
+    if (reservedForIdInput !== undefined) {
+      await this.assertActiveMember(reservedForIdInput);
+    }
     this.assertDateRange(startDate, endDate);
 
     return this.serializable(async (tx) => {
@@ -211,6 +224,9 @@ export class ReservationsService {
         const metadata = {
           ...(title !== undefined ? { title } : {}),
           ...(description !== undefined ? { description } : {}),
+          ...(reservedForIdInput !== undefined
+            ? { reservedForId: reservedForIdInput as string }
+            : {}),
         };
         const unchanged = Object.keys(metadata).length
           ? await tx.reservation.update({
@@ -240,6 +256,9 @@ export class ReservationsService {
           endDate,
           ...(title !== undefined ? { title } : {}),
           ...(description !== undefined ? { description } : {}),
+          ...(reservedForIdInput !== undefined
+            ? { reservedForId: reservedForIdInput as string }
+            : {}),
           status: settings.approvalEnabled
             ? ReservationStatus.PENDING
             : ReservationStatus.APPROVED,
@@ -321,6 +340,14 @@ export class ReservationsService {
     });
   }
 
+  async listActiveMembers() {
+    return this.prisma.member.findMany({
+      where: { isActive: true },
+      select: { id: true, displayName: true, reservationColor: true },
+      orderBy: { displayName: "asc" },
+    });
+  }
+
   async getBookingSettings(): Promise<BookingSettingsView> {
     const settings = await this.prisma.bookingSettings.upsert({
       where: { id: "global" },
@@ -391,6 +418,17 @@ export class ReservationsService {
       }
       return { id: memberId, isActive: isActiveInput };
     });
+  }
+
+  private async assertActiveMember(memberIdInput: unknown): Promise<void> {
+    if (typeof memberIdInput !== "string" || !memberIdInput) {
+      throw new BadRequestException("reservedForId must be a member id");
+    }
+    const member = await this.prisma.member.findFirst({
+      where: { id: memberIdInput, isActive: true },
+      select: { id: true },
+    });
+    if (!member) throw new BadRequestException("reservedForId is not active");
   }
 
   private assertDateRange(startDate: Date, endDate: Date) {

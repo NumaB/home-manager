@@ -72,6 +72,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/reservations/members": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Liste les membres actifs pouvant être réservés */
+    get: operations["ReservationsController_listActiveMembers"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/reservations": {
     parameters: {
       query?: never;
@@ -198,6 +215,11 @@ export interface components {
       /** @example #C72424 */
       reservationColor: string;
     };
+    ActiveMemberOptionDto: {
+      id: string;
+      displayName: string;
+      reservationColor: string;
+    };
     ReservationCreatorDto: {
       id: string;
       displayName: string;
@@ -223,6 +245,7 @@ export interface components {
       title: string | null;
       description: string | null;
       creator: components["schemas"]["ReservationCreatorDto"];
+      reservedFor: components["schemas"]["ReservationCreatorDto"];
       approvals: number;
       rejections: number;
       totalEligibleVoters: number;
@@ -236,6 +259,8 @@ export interface components {
       endDate: string;
       title?: string;
       description?: string;
+      /** @description ID du membre pour qui réserver */
+      reservedForId: string;
     };
     ReservationVoteDto: {
       /** @enum {string} */
@@ -336,6 +361,25 @@ export interface operations {
         };
         content: {
           "application/json": unknown;
+        };
+      };
+    };
+  };
+  ReservationsController_listActiveMembers: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ActiveMemberOptionDto"][];
         };
       };
     };

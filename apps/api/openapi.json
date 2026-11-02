@@ -118,6 +118,34 @@
         "tags": ["health"]
       }
     },
+    "/api/reservations/members": {
+      "get": {
+        "operationId": "ReservationsController_listActiveMembers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActiveMemberOptionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Liste les membres actifs pouvant être réservés",
+        "tags": ["reservations"]
+      }
+    },
     "/api/reservations": {
       "get": {
         "operationId": "ReservationsController_listForMonth",
@@ -440,6 +468,22 @@
         },
         "required": ["reservationColor"]
       },
+      "ActiveMemberOptionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "reservationColor": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          }
+        },
+        "required": ["id", "displayName", "reservationColor"]
+      },
       "ReservationCreatorDto": {
         "type": "object",
         "properties": {
@@ -492,6 +536,9 @@
           "creator": {
             "$ref": "#/components/schemas/ReservationCreatorDto"
           },
+          "reservedFor": {
+            "$ref": "#/components/schemas/ReservationCreatorDto"
+          },
           "approvals": {
             "type": "number",
             "minimum": 0
@@ -519,6 +566,7 @@
           "title",
           "description",
           "creator",
+          "reservedFor",
           "approvals",
           "rejections",
           "totalEligibleVoters",
@@ -543,9 +591,13 @@
           },
           "description": {
             "type": "string"
+          },
+          "reservedForId": {
+            "type": "string",
+            "description": "ID du membre pour qui réserver"
           }
         },
-        "required": ["startDate", "endDate"]
+        "required": ["startDate", "endDate", "reservedForId"]
       },
       "ReservationVoteDto": {
         "type": "object",

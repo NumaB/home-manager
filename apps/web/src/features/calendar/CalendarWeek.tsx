@@ -45,8 +45,8 @@ export function CalendarWeek({
         const isPending = reservation.status === "PENDING";
         const isHighlighted = hoveredReservationId === reservation.id;
         const displayName = reservation.title
-          ? `${reservation.creator.displayName} - ${reservation.title}`
-          : reservation.creator.displayName;
+          ? `${reservation.reservedFor.displayName} - ${reservation.title}`
+          : reservation.reservedFor.displayName;
         const label = isPending
           ? `${displayName} ${reservation.approvals}/${reservation.totalEligibleVoters}`
           : displayName;
@@ -58,14 +58,14 @@ export function CalendarWeek({
               left: `calc(${(startColumn / 7) * 100}% + 3px)`,
               width: `calc(${((endColumn - startColumn + 1) / 7) * 100}% - 6px)`,
               top: 30 + lane * 23,
-              backgroundColor: reservation.creator.reservationColor,
+              backgroundColor: reservation.reservedFor.reservationColor,
               color: getReservationTextColor(
-                reservation.creator.reservationColor,
+                reservation.reservedFor.reservationColor,
               ),
             }}
             type="button"
             aria-label={t("calendar.reservationLabel", {
-              name: reservation.creator.displayName,
+              name: reservation.reservedFor.displayName,
               title: reservation.title ? `, ${reservation.title}` : "",
               start: formatDate(reservation.startDate, locale),
               end: formatDate(reservation.endDate, locale),

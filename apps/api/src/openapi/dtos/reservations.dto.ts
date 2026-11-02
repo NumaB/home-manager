@@ -40,6 +40,9 @@ export class ReservationResponseDto {
   @ApiProperty({ type: ReservationCreatorDto })
   creator!: ReservationCreatorDto;
 
+  @ApiProperty({ type: ReservationCreatorDto })
+  reservedFor!: ReservationCreatorDto;
+
   @ApiProperty({ type: Number, minimum: 0 })
   approvals!: number;
 
@@ -77,6 +80,20 @@ export class ReservationDatesDto {
 
   @ApiPropertyOptional({ type: String })
   description?: string;
+
+  @ApiProperty({ type: String, description: "ID du membre pour qui réserver" })
+  reservedForId!: string;
+}
+
+export class ActiveMemberOptionDto {
+  @ApiProperty({ type: String })
+  id!: string;
+
+  @ApiProperty({ type: String })
+  displayName!: string;
+
+  @ApiProperty({ type: String, pattern: "^#[0-9A-Fa-f]{6}$" })
+  reservationColor!: string;
 }
 
 export class ReservationVoteDto {

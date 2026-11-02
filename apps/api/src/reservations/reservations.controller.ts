@@ -24,6 +24,7 @@ import type { Member } from "@prisma/client";
 import { CurrentMember, RequireRoles } from "@/auth/auth.decorators";
 import { ReservationsService } from "./reservations.service";
 import {
+  ActiveMemberOptionDto,
   BookingSettingsResponseDto,
   ReservationDatesDto,
   ReservationResponseDto,
@@ -39,6 +40,13 @@ export class ReservationsController {
     @Inject(ReservationsService)
     private readonly reservations: ReservationsService,
   ) {}
+
+  @Get("members")
+  @ApiOperation({ summary: "Liste les membres actifs pouvant être réservés" })
+  @ApiOkResponse({ type: ActiveMemberOptionDto, isArray: true })
+  listActiveMembers() {
+    return this.reservations.listActiveMembers();
+  }
 
   @Get()
   @ApiOperation({ summary: "Liste les réservations qui chevauchent un mois" })
@@ -79,6 +87,7 @@ export class ReservationsController {
       endDate?: unknown;
       title?: unknown;
       description?: unknown;
+      reservedForId?: unknown;
     },
     @CurrentMember() member: Member,
   ) {
@@ -88,6 +97,7 @@ export class ReservationsController {
       body.endDate,
       body.title,
       body.description,
+      body.reservedForId,
     );
   }
 
@@ -105,6 +115,7 @@ export class ReservationsController {
       endDate?: unknown;
       title?: unknown;
       description?: unknown;
+      reservedForId?: unknown;
     },
     @CurrentMember() member: Member,
   ) {
@@ -115,6 +126,7 @@ export class ReservationsController {
       body.endDate,
       body.title,
       body.description,
+      body.reservedForId,
     );
   }
 
