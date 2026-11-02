@@ -6,6 +6,10 @@ describe("app store", () => {
   it("initializes the global UI state and exposes menu actions", () => {
     const store = createAppStore();
     assert.equal(store.getState().isMenuOpen, false);
+    assert.equal(store.getState().memberDisplayName, null);
+
+    store.getState().setMemberDisplayName("Camille");
+    assert.equal(store.getState().memberDisplayName, "Camille");
 
     store.getState().openMenu();
     assert.equal(store.getState().isMenuOpen, true);

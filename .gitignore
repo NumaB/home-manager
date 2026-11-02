@@ -18,6 +18,15 @@ apps/web/src/routeTree.gen.ts
 # Keep TanStack file-based index routes even if globally ignored
 !apps/web/src/routes/**/index.tsx
 
+# Keep the repository-wide agent instructions versioned despite global ignores
+!/AGENTS.md
+
+# Local agent skills (keep available locally, don't commit)
+apps/api/.agents/skills/
+apps/api/.claude/skills/
+apps/api/.windsurf/skills/
+apps/api/skills-lock.json
+
 # Editors and operating systems
 .DS_Store
 .idea/
